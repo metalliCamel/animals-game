@@ -11,6 +11,7 @@
   <div class="top">
     <div class="logo">Pies na Tropie</div>
     <div class="top-btns">
+      <button class="btn ghost" id="menuBtn" type="button" hidden>Menu</button>
       <button class="btn ghost" id="albumBtn" type="button" hidden>Album</button>
       <button class="btn ghost" id="mapBtn" type="button" hidden>Mapa</button>
       <button class="btn ghost" id="soundBtn" type="button" aria-pressed="true">Głos: włączony</button>
@@ -19,6 +20,10 @@
 
   <div class="stage" id="stage">
     <div id="world" class="world"></div>
+
+    <div class="overlay start" id="startScreen" hidden>
+      <div class="start-body" id="startBody"></div>
+    </div>
 
     <div class="overlay" id="nameScreen" hidden>
       <div class="namepup" id="namePup"></div>
@@ -30,7 +35,10 @@
         <button class="btn ghost" type="button">Kropka</button>
         <button class="btn ghost" type="button">Reksio</button>
       </div>
-      <button class="btn" id="startBtn" type="button">Gotowe! Gramy</button>
+      <div class="sugg">
+        <button class="btn" id="startBtn" type="button">Gotowe! Gramy</button>
+        <button class="btn ghost" id="nameBack" type="button">Wróć</button>
+      </div>
     </div>
 
     <div class="overlay album" id="albumScreen" hidden>
@@ -50,7 +58,7 @@
     </div>
   </div>
 
-  <button class="rename" id="renameBtn" type="button">Zmień imię pieska</button>
+  <button class="rename" id="renameBtn" type="button" hidden>Zmień imię pieska</button>
 
   <script type="module" src="/src/main.js"></script>
 </body>

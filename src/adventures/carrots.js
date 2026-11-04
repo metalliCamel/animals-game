@@ -21,19 +21,30 @@ export default {
   ],
   start(api) {
     const n = api.name;
-    const culprit = api.pick(['goat', 'pig']);
+    const st = api.state;
+    const resumed = !!st.culprit;
+    if (!st.culprit) { st.culprit = api.pick(['goat', 'pig']); st.wrong = []; api.saveState(); }
+    const culprit = st.culprit;
     const clueB = culprit === 'goat'
       ? { art: 'fur', fence: 'fenceFur', short: 'Biała sierść!', full: 'Na płotku jest biała sierść! Kto ma białą sierść?' }
       : { art: 'mud', fence: 'fenceMud', short: 'Błoto!', full: 'Na płotku jest błoto! Kto lubi chlapać się w błocie?' };
-    let gotA = false;
-    let gotB = false;
+    let gotA = !!st.gotA;
+    let gotB = !!st.gotB;
     let done = false;
+    const keep = () => { st.gotA = gotA; st.gotB = gotB; api.saveState(); };
 
     api.setArt('fence', clueB.fence);
-    api.chip('magnifier', 'Szukaj wskazówek');
-    api.say('rabbit', 'Gdzie marchewki?', 'Ojej! Ktoś zjadł wszystkie moje marchewki! Kto to zrobił?', 'carrot');
-    api.later(4600, () => api.say('dog', 'Jestem detektywem!', `Hau! Jestem ${n}, psi detektyw! Poszukajmy wskazówek. Zacznijmy od grządki.`, 'magnifier'));
-    api.hint('patch', 'Zajrzyj na grządkę', 'Psst! Obwąchaj grządkę z marchewkami!', 'rabbit');
+    api.chip('magnifier', gotA && gotB ? 'Kto to zrobił?' : 'Szukaj wskazówek');
+    if (gotA) { api.spawn('trail', 'hoofTrail', 50, 9, 24); api.clue('hoof'); }
+    if (gotB) api.clue(clueB.art);
+    st.wrong.forEach((id) => api.fade(id));
+    nextHint();
+    if (resumed) {
+      api.say('dog', 'Śledztwo trwa!', `Hau! Wracamy do śledztwa! ${gotA && gotB ? 'Mamy dwie wskazówki. Kto zjadł marchewki?' : 'Szukajmy dalej wskazówek.'}`, 'magnifier');
+    } else {
+      api.say('rabbit', 'Gdzie marchewki?', 'Ojej! Ktoś zjadł wszystkie moje marchewki! Kto to zrobił?', 'carrot');
+      api.later(4600, () => api.say('dog', 'Jestem detektywem!', `Hau! Jestem ${n}, psi detektyw! Poszukajmy wskazówek. Zacznijmy od grządki.`, 'magnifier'));
+    }
 
     function nextHint() {
       if (!gotA) api.hint('patch', 'Zajrzyj na grządkę', 'Obwąchaj grządkę z marchewkami!', 'rabbit');
@@ -50,6 +61,7 @@ export default {
       if (done) { api.say('rabbit', 'Rosną!', 'Moje marchewki znowu rosną!', 'carrot'); return; }
       if (gotA) { api.say('dog', 'Już tu byliśmy', 'Tu już znaleźliśmy ślady kopytek.', 'hoof'); return; }
       gotA = true;
+      keep();
       api.shake('patch');
       api.spawn('trail', 'hoofTrail', 50, 9, 24);
       api.clue('hoof');
@@ -63,6 +75,7 @@ export default {
       if (done) return;
       if (gotB) { api.say('dog', 'Już to mamy', 'Tę wskazówkę już mamy.', clueB.art); return; }
       gotB = true;
+      keep();
       api.shake('fence');
       api.clue(clueB.art);
       api.sparkles('fence');
@@ -92,7 +105,12 @@ export default {
         if (done) { api.say(id, ...idle[id]); return; }
         api.shake(id);
         if (!gotA || !gotB) { api.say(id, idle[id][0], idle[id][1]); return; }
-        if (id !== culprit) { api.fade(id); api.say(id, ...notMe[id]); return; }
+        if (id !== culprit) {
+          api.fade(id);
+          if (!st.wrong.includes(id)) { st.wrong.push(id); api.saveState(); }
+          api.say(id, ...notMe[id]);
+          return;
+        }
         done = true;
         api.hint(null);
         api.say(id, 'To ja...', `${id === 'goat' ? 'Mee' : 'Chrum'}... To ja. Przepraszam! Były takie pyszne. Pomogę posadzić nowe!`, 'carrot');

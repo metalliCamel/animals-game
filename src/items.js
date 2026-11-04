@@ -6,6 +6,10 @@ export const ITEMS = {
   egg: { art: 'egg', forms: ['koszyk jajek', 'koszyki jajek', 'koszyków jajek'] },
   flower: { art: 'flower', forms: ['bukiet kwiatów', 'bukiety kwiatów', 'bukietów kwiatów'] },
   mushroom: { art: 'mushroom', forms: ['grzybek', 'grzybki', 'grzybków'] },
+  wool: { art: 'wool', forms: ['kłębek wełny', 'kłębki wełny', 'kłębków wełny'] },
+  lantern: { art: 'lantern', forms: ['latarka', 'latarki', 'latarek'] },
+  crystal: { art: 'crystal', forms: ['kryształ', 'kryształy', 'kryształów'] },
+  bell: { art: 'bell', forms: ['dzwonek', 'dzwonki', 'dzwonków'] },
 };
 
 const NUM = ['zero', 'jeden', 'dwa', 'trzy', 'cztery', 'pięć', 'sześć', 'siedem', 'osiem', 'dziewięć', 'dziesięć'];

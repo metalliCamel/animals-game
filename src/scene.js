@@ -20,6 +20,18 @@ const BACKGROUNDS = {
     <div class="cloud" style="top:12%;animation-delay:-30s"></div>
     <div class="hill"></div>
     <div class="ground farm-ground"></div>`,
+  alp: `
+    <div class="cloud" style="top:8%;animation-delay:-12s"></div>
+    <svg class="peaks" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L70 30 L120 80 L190 8 L250 70 L300 34 L400 120 Z" fill="#A9B4BC"/><path d="M50 120 L140 52 L210 120 Z M230 120 L330 50 L400 100 L400 120 Z" fill="#949FA8"/><path d="M70 30 L84 48 L74 44 L64 50 L58 45 Z M190 8 L210 32 L196 27 L184 34 L174 26 Z M300 34 L314 50 L302 46 L292 52 Z" fill="#FFFBF0"/></svg>
+    <div class="ground alp-ground"></div>`,
+  cave: `
+    <div class="cave-wall"></div>
+    <div class="ground cave-ground"></div>
+    <div class="darkness"></div>`,
+  peak: `
+    <div class="cloud" style="top:62%;animation-delay:-5s;animation-duration:60s"></div>
+    <div class="cloud" style="top:72%;height:7%;animation-delay:-30s;animation-duration:70s"></div>
+    <div class="ground peak-ground"></div>`,
   forest: `
     <div class="beam" style="left:20%"></div>
     <div class="beam" style="left:58%;animation-delay:-3s"></div>
@@ -92,7 +104,8 @@ export function runScene(root, adv, ctx) {
   // ---------- Plecak ----------
   // Zawartość plecaka żyje w zapisie gry (ctx.bag), więc przechodzi między miejscami.
   const bag = ctx.bag;
-  let held = null; // przedmiot wyjęty z plecaka, który piesek trzyma w pysku
+  let held = null;
+  let onHold = null; // przygoda może zareagować na wyjęcie przedmiotu (np. latarka rozświetla jaskinię) // przedmiot wyjęty z plecaka, który piesek trzyma w pysku
   const bagBtn = document.createElement('button');
   bagBtn.type = 'button';
   bagBtn.className = 'bagbtn';
@@ -156,6 +169,7 @@ export function runScene(root, adv, ctx) {
     if (!slot) { panel.hidden = true; return; }
     const id = slot.dataset.item;
     holdFromBag(id);
+    if (onHold && onHold(id)) return;
     const n = bagCounts()[id] || 0;
     say(n > 1 ? `Wyjmuję: ${itemPhrase(id, n)}. Komu je dać?` : 'Wyjęte! Komu to dać?');
   });
@@ -283,6 +297,9 @@ export function runScene(root, adv, ctx) {
         return taken;
       },
     },
+    onHold(fn) { onHold = fn; },
+    cls(id, name, on = true) { els[id].classList.toggle(name, on); },
+    sceneClass(name, on = true) { scene.classList.toggle(name, on); },
     // Piesek idzie w podane miejsce (np. żeby zrobić miejsce gościom)
     walk: (x, b) => walkTo(x, b),
     // Stan przygody wieloetapowej (zapisywany w save.flags) i powrót na mapę
@@ -348,7 +365,12 @@ export function runScene(root, adv, ctx) {
     const hit = ev.target.closest('.hit');
     if (hit) {
       const id = hit.dataset.id;
-      if (handlers[id]) { await approach(id); handlers[id](id); }
+      if (handlers[id]) {
+        await approach(id);
+        // Na czas dłuższej reakcji (animacje, plecak) kolejne kliknięcia czekają
+        busy = true;
+        try { await handlers[id](id); } finally { busy = false; }
+      }
       return;
     }
     const r = scene.getBoundingClientRect();

@@ -27,15 +27,23 @@ export default {
   start(api) {
     const n = api.name;
     const spots = ['leaves', 'log', 'mush', 'stone'];
-    const searched = new Set();
+    const st = api.state;
+    const resumed = !!st.hidden;
     let done = false;
 
     // Ile orzechów brakuje, biorąc pod uwagę te już w plecaku
     const inBag = () => api.bag.count('nut');
     const left = () => Math.max(0, NEED - inBag());
-    const hidden = new Set();
-    const shuffled = [...spots].sort(() => Math.random() - 0.5);
-    shuffled.slice(0, left()).forEach((s) => hidden.add(s));
+    // Kryjówki losujemy raz i zapisujemy; orzechy już leżące w plecaku się liczą
+    if (!st.hidden) {
+      st.hidden = [...spots].sort(() => Math.random() - 0.5).slice(0, left());
+      st.searched = [];
+      api.saveState();
+    }
+    const hidden = new Set(st.hidden);
+    const searched = new Set(st.searched);
+    searched.forEach((id) => api.fade(id));
+    const markSearched = (id) => { searched.add(id); st.searched = [...searched]; api.saveState(); };
 
     function showTray() {
       const have = Math.min(inBag(), NEED);
@@ -55,8 +63,14 @@ export default {
 
     api.chip('nut', left() > 0 ? 'Zbierz orzechy' : 'Oddaj wiewiórce');
     showTray();
-    api.say('squirrel', 'Potrzebuję orzechów!', `Cześć, ${n}! Zbliża się zima, a ja nie mam zapasów. Znajdziesz dla mnie trzy orzechy?`, 'nut');
-    api.later(5200, () => api.say('dog', 'Do plecaka!', 'Hau! Znalezione orzechy schowam do plecaka. Plecak jest w rogu!'));
+    if (resumed) {
+      api.say('squirrel', 'Wróciłeś!', left() > 0
+        ? `Cześć, ${n}! Masz już ${countWord(Math.min(inBag(), NEED))} z trzech orzechów. Szukajmy dalej!`
+        : `Cześć, ${n}! Masz już trzy orzechy w plecaku! Wyjmij je i daj mi.`, 'nut');
+    } else {
+      api.say('squirrel', 'Potrzebuję orzechów!', `Cześć, ${n}! Zbliża się zima, a ja nie mam zapasów. Znajdziesz dla mnie trzy orzechy?`, 'nut');
+      api.later(5200, () => api.say('dog', 'Do plecaka!', 'Hau! Znalezione orzechy schowam do plecaka. Plecak jest w rogu!'));
+    }
     setHint();
 
     const empty = [
@@ -69,7 +83,7 @@ export default {
         if (done) return;
         api.shake(id);
         if (searched.has(id)) { api.say('dog', 'Już tu byliśmy', 'Tu już szukaliśmy.'); return; }
-        searched.add(id);
+        markSearched(id);
         if (!hidden.has(id)) {
           api.fade(id);
           api.say('dog', ...api.pick(empty));

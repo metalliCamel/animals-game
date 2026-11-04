@@ -20,4 +20,7 @@ export const FRIENDS = [
   { adventure: 'parcel', art: 'duckHat', name: 'Kaczka', place: 'Staw', line: 'Kaczka ma piękny kapelusz.' },
   { adventure: 'carrots', art: 'rabbit', name: 'Królik', place: 'Farma', line: 'Królik ma nowe marchewki.' },
   { adventure: 'nuts', art: 'squirrel', name: 'Wiewiórka', place: 'Las', line: 'Wiewiórka ma zapasy na zimę.' },
+  { adventure: 'bell', art: 'sheepBell', name: 'Owieczka', place: 'Góry', line: 'Owieczka ma swój dzwonek.' },
+  { adventure: 'bell', art: 'marmot', name: 'Świstak', place: 'Góry', line: 'Świstak ma ciepły sweterek z wełny.' },
+  { adventure: 'bell', art: 'eagle', name: 'Orlica', place: 'Góry', line: 'Orlica ma piękny kryształ.' },
 ];

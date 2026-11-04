@@ -18,18 +18,28 @@ export default {
   ],
   start(api) {
     const n = api.name;
-    let got = false;
+    const st = api.state;
+    let got = !!st.got;
     let done = false;
 
-    api.chip('parcel', 'Odbierz paczkę');
-    api.say('dog', 'Jaki ładny staw!', `Hau! Ale ładny staw! Ciekawe, kto tu mieszka.`);
-    api.later(3800, () => api.say('owl', 'Mam paczkę!', `Huu huu! Jestem sowa listonoszka. Mam paczkę, ale zmęczyły mi się skrzydełka. Pomożesz mi, ${n}?`, 'parcel'));
-    api.hint('owl', 'Tutaj!', 'Huu huu! Tutaj jestem, przy pieńku. Kliknij mnie!');
+    if (got) {
+      api.carry('parcel');
+      api.chip('duckIcon', 'Zanieś paczkę');
+      api.say('dog', 'Mam paczkę!', 'Hau! Mamy paczkę od sowy. Popatrz na rysunek: dla kogo jest?', 'duckIcon');
+      api.hint('duck', 'Kwa kwa!', 'Kwa kwa! Czy ktoś ma paczkę dla mnie?');
+    } else {
+      api.chip('parcel', 'Odbierz paczkę');
+      api.say('dog', 'Jaki ładny staw!', `Hau! Ale ładny staw! Ciekawe, kto tu mieszka.`);
+      api.later(3800, () => api.say('owl', 'Mam paczkę!', `Huu huu! Jestem sowa listonoszka. Mam paczkę, ale zmęczyły mi się skrzydełka. Pomożesz mi, ${n}?`, 'parcel'));
+      api.hint('owl', 'Tutaj!', 'Huu huu! Tutaj jestem, przy pieńku. Kliknij mnie!');
+    }
 
     api.on('owl', () => {
       if (done) { api.say('owl', 'Dziękuję!', 'Huu! Dziękuję za pomoc!'); return; }
       if (got) { api.say('owl', 'Kto na rysunku?', 'Zanieś paczkę. Popatrz, kto jest narysowany na paczce!', 'duckIcon'); return; }
       got = true;
+      st.got = true;
+      api.saveState();
       api.carry('parcel');
       api.hop('owl');
       api.chip('duckIcon', 'Zanieś paczkę');

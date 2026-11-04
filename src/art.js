@@ -239,7 +239,67 @@ const balloons = `<svg viewBox="0 0 80 130"><path d="M20 50 q6 30 18 78 M40 40 q
 
 const cake = `<svg viewBox="0 0 44 44"><rect x="6" y="18" width="32" height="22" rx="4" fill="#F7D3A8"/><rect x="6" y="18" width="32" height="7" rx="3" fill="#FFFBF0"/><path d="M6 25 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0" fill="#FFFBF0"/><circle cx="14" cy="32" r="2.5" fill="#E2525C"/><circle cx="22" cy="33" r="2.5" fill="#E2525C"/><circle cx="30" cy="32" r="2.5" fill="#E2525C"/><rect x="20" y="6" width="4" height="12" rx="2" fill="#7FC7E8"/><path d="M22 0 q4 3 0 6 q-4 -3 0 -6" fill="#FFD25A"/></svg>`;
 
+// ---------- Góry ----------
+const sheepSvg = (bell, w = 120) => `<svg viewBox="0 0 ${w} 100">
+<rect x="34" y="62" width="9" height="32" rx="4" fill="#4A4038"/><rect x="74" y="62" width="9" height="32" rx="4" fill="#4A4038"/>
+${[[30, 50], [44, 38], [62, 34], [80, 40], [92, 54], [78, 66], [56, 70], [36, 66], [58, 52]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="16" fill="#FFFBF0" stroke="#E2DCD0" stroke-width="2"/>`).join('')}
+<rect x="44" y="66" width="9" height="30" rx="4" fill="#5A4F45"/><rect x="84" y="64" width="9" height="30" rx="4" fill="#5A4F45"/>
+<ellipse cx="102" cy="44" rx="13" ry="17" fill="#5A4F45"/>
+<ellipse cx="92" cy="32" rx="9" ry="5" fill="#4A4038" transform="rotate(-25 92 32)"/><ellipse cx="114" cy="34" rx="9" ry="5" fill="#4A4038" transform="rotate(25 114 34)"/>
+<circle cx="97" cy="42" r="3" fill="#FFFBF0"/><circle cx="108" cy="42" r="3" fill="#FFFBF0"/><circle cx="97.5" cy="42.5" r="1.8" fill="#2E3A2A"/><circle cx="108.5" cy="42.5" r="1.8" fill="#2E3A2A"/>
+<circle cx="96" cy="28" r="7" fill="#FFFBF0"/><circle cx="106" cy="26" r="7" fill="#FFFBF0"/>
+${bell ? `<path d="M94 60 q8 6 16 0" stroke="#E2525C" stroke-width="4" fill="none"/><path d="M96 64 h12 l-2 12 h-8 z" fill="#FFD25A" stroke="#D9A62E" stroke-width="2"/><circle cx="102" cy="78" r="2.5" fill="#D9A62E"/>` : ''}
+</svg>`;
+const sheep = sheepSvg(false);
+const sheepBell = sheepSvg(true);
+
+const marmot = `<svg viewBox="0 0 90 110">
+<ellipse cx="45" cy="80" rx="26" ry="28" fill="#B08A5E"/><ellipse cx="45" cy="86" rx="15" ry="18" fill="#E2CBA4"/>
+<circle cx="45" cy="42" r="22" fill="#B08A5E"/><circle cx="27" cy="26" r="6" fill="#8F6B45"/><circle cx="63" cy="26" r="6" fill="#8F6B45"/>
+<ellipse cx="45" cy="52" rx="12" ry="9" fill="#E2CBA4"/>
+<circle cx="37" cy="38" r="3.8" fill="#2E3A2A"/><circle cx="53" cy="38" r="3.8" fill="#2E3A2A"/><circle cx="38" cy="37" r="1.2" fill="#fff"/><circle cx="54" cy="37" r="1.2" fill="#fff"/>
+<ellipse cx="45" cy="47" rx="4" ry="3" fill="#4A4038"/><rect x="41" y="54" width="8" height="7" rx="2" fill="#FFFBF0" stroke="#CFC7AE"/>
+<path d="M24 74 q-6 -8 2 -14 M66 74 q6 -8 -2 -14" stroke="#8F6B45" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M22 20 C24 6 66 6 68 20 L64 24 C56 16 34 16 26 24 Z" fill="#3F8F3A"/><circle cx="45" cy="8" r="5" fill="#E2525C"/>
+<ellipse cx="32" cy="106" rx="9" ry="4" fill="#8F6B45"/><ellipse cx="58" cy="106" rx="9" ry="4" fill="#8F6B45"/>
+</svg>`;
+
+const hut = `<svg viewBox="0 0 160 130"><path d="M8 62 L80 8 L152 62 Z" fill="#7A4A22"/><path d="M20 62 L80 18 L140 62 Z" fill="#9A6A3C"/><rect x="26" y="60" width="108" height="68" fill="#C99A5E"/>${[70, 84, 98, 112].map((y) => `<rect x="26" y="${y}" width="108" height="3" fill="#A87A44"/>`).join('')}<rect x="66" y="84" width="28" height="44" rx="3" fill="#7A4A22"/><circle cx="88" cy="108" r="2.5" fill="#FFD25A"/><rect x="36" y="74" width="20" height="18" rx="2" fill="#FFE79A" stroke="#7A4A22" stroke-width="3"/><rect x="104" y="74" width="20" height="18" rx="2" fill="#FFE79A" stroke="#7A4A22" stroke-width="3"/><rect x="108" y="20" width="12" height="28" fill="#8C9389"/><path d="M114 14 q6 -6 0 -12" stroke="#E6E9DD" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`;
+
+const wool = `<svg viewBox="0 0 44 40">${[[14, 22], [22, 14], [30, 22], [22, 28], [14, 30], [32, 30]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="1.5"/>`).join('')}</svg>`;
+
+const lantern = `<svg viewBox="0 0 40 48"><path d="M12 10 C12 0 28 0 28 10" stroke="#5A4F45" stroke-width="3" fill="none"/><rect x="10" y="8" width="20" height="6" rx="2" fill="#5A4F45"/><rect x="11" y="14" width="18" height="24" rx="4" fill="#FFE79A" stroke="#5A4F45" stroke-width="3"/><path d="M20 30 q-5 -6 0 -12 q5 6 0 12" fill="#F08A24"/><rect x="9" y="38" width="22" height="6" rx="2" fill="#5A4F45"/></svg>`;
+
+const bat = `<svg viewBox="0 0 110 70"><path d="M55 8 v8" stroke="#5A4F45" stroke-width="3"/><path d="M55 22 C40 10 18 14 6 24 C16 26 18 34 14 42 C26 36 34 40 40 48 C44 40 50 38 55 40 C60 38 66 40 70 48 C76 40 84 36 96 42 C92 34 94 26 104 24 C92 14 70 10 55 22 Z" fill="#6B5B7A"/><circle cx="55" cy="34" r="13" fill="#7E6C8E"/><path d="M45 24 L46 14 L51 22 Z M65 24 L64 14 L59 22 Z" fill="#7E6C8E"/><circle cx="50" cy="32" r="3" fill="#FFFBF0"/><circle cx="60" cy="32" r="3" fill="#FFFBF0"/><circle cx="50" cy="33" r="1.6" fill="#2E3A2A"/><circle cx="60" cy="33" r="1.6" fill="#2E3A2A"/><path d="M51 40 l2 3 l2 -3 M55 40 l2 3 l2 -3" stroke="#FFFBF0" stroke-width="1.5" fill="none"/></svg>`;
+
+const crystal = `<svg viewBox="0 0 40 44"><path d="M20 2 L32 14 L26 40 L14 40 L8 14 Z" fill="#9FD8F2"/><path d="M20 2 L26 40 L14 40 Z" fill="#C6EAF8"/><path d="M8 14 L32 14" stroke="#7FC7E8" stroke-width="2"/><path d="M14 8 l-4 -4 M28 8 l4 -4 M34 22 l5 0" stroke="#FFD25A" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+
+const crystalSet = (big) => `<svg viewBox="0 0 120 80"><ellipse cx="60" cy="74" rx="54" ry="6" fill="#0003"/><path d="M14 74 C10 56 30 44 60 46 C92 44 112 58 106 74 Z" fill="#5A4F45"/>${[[34, 12, 12, 40], ...(big ? [[56, 0, 16, 50]] : []), [80, 16, 12, 36], [46, 24, 10, 28], [70, 28, 9, 24]].map(([x, y, w, h]) => `<path d="M${x} ${y + 10} L${x + w / 2} ${y} L${x + w} ${y + 10} L${x + w * 0.8} ${y + h + 10} L${x + w * 0.2} ${y + h + 10} Z" fill="#9FD8F2" stroke="#7FC7E8" stroke-width="1.5"/>`).join('')}</svg>`;
+const crystals = crystalSet(true);
+const crystalsTaken = crystalSet(false);
+
+const bellItem = `<svg viewBox="0 0 40 44"><path d="M10 6 q10 -6 20 0" stroke="#E2525C" stroke-width="4" fill="none"/><path d="M8 34 C8 18 12 8 20 8 C28 8 32 18 32 34 Z" fill="#FFD25A" stroke="#D9A62E" stroke-width="2.5"/><rect x="6" y="32" width="28" height="5" rx="2.5" fill="#D9A62E"/><circle cx="20" cy="40" r="3.5" fill="#D9A62E"/><path d="M14 16 q-2 8 -1 14" stroke="#FFF2B0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`;
+
+const eagle = `<svg viewBox="0 0 110 110">
+<path d="M24 60 C6 54 2 34 10 22 C20 34 30 40 40 44 Z M86 60 C104 54 108 34 100 22 C90 34 80 40 70 44 Z" fill="#6E4A2E"/>
+<ellipse cx="55" cy="70" rx="24" ry="30" fill="#7A5232"/>
+<path d="M40 96 l-4 10 M48 98 l-2 10 M62 98 l2 10 M70 96 l4 10" stroke="#F0B42E" stroke-width="4" stroke-linecap="round"/>
+<circle cx="55" cy="34" r="19" fill="#FFFBF0"/>
+<path d="M60 38 C74 36 78 44 70 50 C68 46 64 44 60 44 Z" fill="#F0B42E"/>
+<circle cx="50" cy="30" r="4" fill="#2E3A2A"/><circle cx="62" cy="30" r="4" fill="#2E3A2A"/><circle cx="51" cy="29" r="1.3" fill="#fff"/><circle cx="63" cy="29" r="1.3" fill="#fff"/>
+<path d="M44 24 l10 3 M66 24 l-8 3" stroke="#2E3A2A" stroke-width="2.5" stroke-linecap="round"/>
+</svg>`;
+
+const nestRock = (withBell) => `<svg viewBox="0 0 120 70"><path d="M4 68 C0 44 24 30 60 32 C96 30 118 46 116 68 Z" fill="#8C9389"/><path d="M20 40 q20 -10 40 -6" stroke="#A3AAA0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M26 34 C28 50 92 50 94 34 Z" fill="#9A6A3C"/><path d="M26 34 q10 -6 18 0 q10 -6 18 0 q10 -6 18 0 q8 -6 14 0" stroke="#B8864E" stroke-width="5" fill="none" stroke-linecap="round"/>${withBell ? `<g transform="translate(46 4) scale(.8)"><path d="M8 34 C8 18 12 8 20 8 C28 8 32 18 32 34 Z" fill="#FFD25A" stroke="#D9A62E" stroke-width="2.5"/><rect x="6" y="32" width="28" height="5" rx="2.5" fill="#D9A62E"/></g><path d="M40 10 l-6 -6 M76 10 l6 -6 M58 0 l0 -6" stroke="#FFD25A" stroke-width="3" stroke-linecap="round"/>` : ''}</svg>`;
+
+const peak = `<svg viewBox="0 0 60 50"><path d="M2 48 L22 12 L32 26 L40 16 L58 48 Z" fill="#8C9389"/><path d="M22 12 L28 22 L24 20 L19 24 L16 22 Z M40 16 L45 24 L41 23 L37 26 Z" fill="#FFFBF0"/></svg>`;
+const cave = `<svg viewBox="0 0 60 50"><path d="M2 48 C2 18 18 4 30 4 C42 4 58 18 58 48 Z" fill="#8C9389"/><path d="M16 48 C16 30 22 20 30 20 C38 20 44 30 44 48 Z" fill="#3A2E28"/></svg>`;
+const rock = `<svg viewBox="0 0 110 60"><path d="M6 58 C2 34 26 14 54 14 C84 14 108 34 104 58 Z" fill="#8C9389"/><path d="M28 30 q14 -12 34 -8" stroke="#A3AAA0" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
+const flowersAlp = `<svg viewBox="0 0 80 40">${[[12, 22, '#B48FD8'], [30, 14, '#FFFBF0'], [48, 24, '#B48FD8'], [66, 16, '#FFD25A']].map(([x, y, c]) => `<path d="M${x} 40 V${y + 4}" stroke="#4E9E3C" stroke-width="2.5"/><g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-4" rx="3" ry="4.5" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="2.2" fill="#F08A24"/></g>`).join('')}</svg>`;
+
 export const ART = {
+  sheep, sheepBell, marmot, hut, wool, lantern, bat, crystal, crystals, crystalsTaken, bell: bellItem, eagle,
+  nestBell: nestRock(true), nestEmpty: nestRock(false), peak, cave, rock, flowersAlp,
   invite, egg, flower, mushroom, nest, nestEggs, lilies, balloons, cake,
   table: table({}), tableCake: table({ cake: true }), tableFlowers: table({ flowers: true }), tableFull: table({ cake: true, flowers: true }),
   backpack, nut, squirrel, pine, leafPile, log, mushrooms, stone,

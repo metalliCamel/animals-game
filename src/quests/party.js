@@ -354,6 +354,10 @@ const las = {
 export default {
   id: 'party',
   title: 'Urodziny kotka',
+  region: 'dolina',
+  icon: 'cake',
+  newText: 'Psst! Kotek cię woła! Ma dla ciebie ważną sprawę. Kliknij łąkę z balonikiem!',
+  callText: 'Kotek cię woła! Kliknij łąkę z balonikiem.',
   after: 'nuts', // dostępna po ukończeniu lasu
   start: 'laka',
   sticker: 'cake',

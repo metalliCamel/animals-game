@@ -51,3 +51,18 @@ Trwały ekwipunek pieska (`save.bag`), wspólny dla wszystkich miejsc i zapisywa
 - `api.held` – przedmiot, który dziecko wyjęło z plecaka i piesek trzyma w pysku.
 
 Nowe przedmioty dopisuje się w `src/items.js`. Na plecaku opierają się przyszłe przygody wieloetapowe, w których coś znalezione w jednym miejscu rozwiązuje zagadkę w innym (do tego służy też `save.flags`).
+
+## Góry
+
+Drugi region, otwierany drogowskazem na mapie doliny po urodzinach kotka. Miejsca: Hala, Schronisko, Jaskinia, Szczyt.
+
+6. **Dzwonek owieczki** (góry) – owieczka zgubiła dzwonek. Wełna od owieczki → świstak w schronisku daje za nią latarkę → latarka rozświetla ciemną jaskinię, nietoperz zdradza, że dzwonek zabrała orlica, a w jaskini leży kryształ → orlica na szczycie wymienia dzwonek na kryształ → dzwonek wraca na halę.
+
+Regiony i ich miejsca są w `src/world.js`, przygody wieloetapowe w `src/quests/`.
+
+## Zapisy
+
+- Ekran startowy: **Graj dalej** (ostatni zapis), **Nowa gra**, **Wczytaj grę**.
+- Trzy niezależne zapisy, każdy z własnym pieskiem. Usuwanie i zastępowanie pytają o potwierdzenie na stronie.
+- Gra zapisuje się sama przy każdej zmianie: miejsce, w którym jest piesek, plecak i postęp każdej przygody. Po wyjściu w połowie (przycisk Menu, zamknięcie karty) **Graj dalej** wraca dokładnie do tej samej sceny.
+- Zapis z pierwszej wersji gry jest automatycznie przenoszony do pierwszego miejsca.

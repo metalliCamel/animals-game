@@ -1,80 +1,130 @@
 import './style.css';
 import { ART } from './art.js';
-import { say, setSound, soundOn } from './speech.js';
-import { loadSave, writeSave } from './save.js';
+import { say, setSound, soundOn, stopSpeech } from './speech.js';
+import { loadAll, newSave, storeSlot, deleteSlot, whenText } from './saves.js';
 import { runScene } from './scene.js';
 import { runMap } from './map.js';
-import { ADVENTURES, PLACES, FRIENDS } from './adventures/index.js';
-import party from './quests/party.js';
+import { ADVENTURES, FRIENDS } from './adventures/index.js';
+import { REGIONS, ALL_PLACES, QUESTS, placeRegion } from './world.js';
 
 const $ = (s) => document.querySelector(s);
 const world = $('#world');
+const startScreen = $('#startScreen');
 const nameScreen = $('#nameScreen');
 const endScreen = $('#endScreen');
+const albumScreen = $('#albumScreen');
 const nameInput = $('#nameInput');
 const mapBtn = $('#mapBtn');
 const albumBtn = $('#albumBtn');
-const albumScreen = $('#albumScreen');
+const menuBtn = $('#menuBtn');
+const renameBtn = $('#renameBtn');
 
-const save = loadSave();
-// Plecak współdzielony przez wszystkie miejsca i zapisywany razem z grą
+// ---------- Zapis ----------
+// `save` to aktualnie grany zapis. Gra zapisuje się sama przy każdej zmianie.
+let slot = null;
+let save = null;
+function writeSave() { if (slot !== null && save) storeSlot(slot, save); }
+
+// Plecak współdzielony przez wszystkie miejsca
 const bag = {
   get items() { return save.bag; },
   set items(v) { save.bag = v; },
-  save() { writeSave(save); },
+  save: writeSave,
 };
-let destroy = null;
-let current = null; // { place, adventure }
 
+let destroy = null;
+let current = null; // { place, adventure, unlocked, questNew }
 function clear() { if (destroy) destroy(); destroy = null; }
 
-// Przygoda wieloetapowa: aktywna po ukończeniu wymaganej przygody, do czasu jej końca
-const QUEST = party;
-const questActive = () => save.done.includes(QUEST.after) && !save.done.includes(QUEST.id);
-function questState() {
-  if (!save.flags[QUEST.id]) save.flags[QUEST.id] = {};
-  return QUEST.initState(save.flags[QUEST.id]);
+function hideOverlays() {
+  for (const el of [startScreen, nameScreen, endScreen, albumScreen]) el.hidden = true;
 }
-const bagCount = (id) => save.bag.filter((x) => x === id).length;
-function questInfo() {
-  if (!questActive()) return null;
-  const st = questState();
-  return { title: QUEST.title, list: QUEST.checklist(st), todo: (placeId) => QUEST.todo(placeId, st, bagCount), start: QUEST.start, started: !!st.started };
+function setTopBar(mode) {
+  mapBtn.hidden = mode !== 'scene';
+  albumBtn.hidden = mode !== 'map';
+  menuBtn.hidden = mode === 'start' || mode === 'name';
+  renameBtn.hidden = mode !== 'map';
+  mapBtn.classList.remove('pulse');
 }
 
+// ---------- Przygody wieloetapowe ----------
+const questActive = (q) => save.done.includes(q.after) && !save.done.includes(q.id);
+function questState(q) {
+  if (!save.flags[q.id]) save.flags[q.id] = {};
+  return q.initState(save.flags[q.id]);
+}
+const bagCount = (id) => save.bag.filter((x) => x === id).length;
+function questInfo(regionId) {
+  const q = QUESTS.find((x) => x.region === regionId && questActive(x));
+  if (!q) return null;
+  const st = questState(q);
+  return {
+    title: q.title, icon: q.icon, callText: q.callText, started: !!st.started,
+    list: q.checklist(st), todo: (placeId) => q.todo(placeId, st, bagCount),
+  };
+}
+// Miejsce bez własnej przygody (góry) zawsze pokazuje scenę swojej przygody wieloetapowej
+function questForPlace(place) {
+  return QUESTS.find((q) => q.scenes[place.id] && (questActive(q) || (!place.adventure && save.done.includes(q.after))));
+}
+
+// ---------- Mapa i miejsca ----------
 function showMap(extra = {}) {
   clear();
-  endScreen.hidden = true;
-  albumScreen.hidden = true;
-  mapBtn.hidden = true;
-  mapBtn.classList.remove('pulse');
-  albumBtn.hidden = false;
-  destroy = runMap(world, { save, at: current?.place.id, onPick: startPlace, quest: questInfo(), ...extra });
+  hideOverlays();
+  setTopBar('map');
+  save.resume = null;
+  writeSave();
+  const region = REGIONS[save.region] || REGIONS.dolina;
+  const target = region.gate && region.gate.to;
+  const tq = target && questInfo(target);
+  const gateCalls = !!(tq && (!tq.started || REGIONS[target].places.some((p) => tq.todo(p.id))));
+  destroy = runMap(world, {
+    save, region, at: current?.place.id, quest: questInfo(region.id), gateCalls,
+    onPick: startPlace, onTravel: travel, ...extra,
+  });
+}
+
+function travel(regionId) {
+  save.region = regionId;
+  current = null;
+  showMap({ fromGate: true });
 }
 
 function startPlace(place) {
   clear();
-  mapBtn.hidden = false;
-  albumBtn.hidden = true;
-  if (questActive() && QUEST.scenes[place.id]) {
-    const scene = { ...QUEST.scenes[place.id], id: QUEST.id, sticker: QUEST.sticker, winText: QUEST.winText };
+  hideOverlays();
+  setTopBar('scene');
+  save.region = placeRegion(place.id);
+  save.resume = { place: place.id };
+  writeSave();
+  const common = { name: save.name, bag, onWin, saveState: writeSave, pulseMap: () => mapBtn.classList.add('pulse') };
+
+  const q = questForPlace(place);
+  if (q) {
+    const scene = { ...q.scenes[place.id], id: q.id, sticker: q.sticker, winText: q.winText };
     current = { place, adventure: scene };
-    destroy = runScene(world, scene, {
-      name: save.name, bag, onWin, state: questState(), saveState: () => writeSave(save),
-      pulseMap: () => mapBtn.classList.add('pulse'),
-    });
+    destroy = runScene(world, scene, { ...common, state: questState(q) });
     return;
   }
-  current = { place, adventure: ADVENTURES[place.adventure] };
-  destroy = runScene(world, current.adventure, { name: save.name, bag, onWin });
+  // Zwykła przygoda: jej stan też jest zapisywany, żeby można było wrócić w połowie
+  const adv = ADVENTURES[place.adventure];
+  if (!save.flags.adv) save.flags.adv = {};
+  if (!save.flags.adv[adv.id]) save.flags.adv[adv.id] = {};
+  current = { place, adventure: adv };
+  destroy = runScene(world, adv, { ...common, state: save.flags.adv[adv.id] });
 }
 
 function onWin(adv) {
   const first = !save.done.includes(adv.id);
-  if (first) { save.done.push(adv.id); writeSave(save); }
-  const unlocked = first ? PLACES.find((p) => p.after === adv.id && !p.soon) : null;
+  if (first) save.done.push(adv.id);
+  if (save.flags.adv) delete save.flags.adv[adv.id]; // następnym razem przygoda zaczyna się od nowa
+  save.resume = null;
+  writeSave();
+  const unlocked = first ? ALL_PLACES.find((p) => p.after === adv.id && !p.soon) : null;
   current.unlocked = unlocked ? unlocked.id : null;
-  current.questNew = first && adv.id === QUEST.after;
+  const nq = first ? QUESTS.find((q) => q.after === adv.id) : null;
+  current.questNew = nq ? nq.newText : null;
 
   $('#sticker').innerHTML = `${ART.star}<span class="sticker-pic">${ART[adv.sticker]}</span>`;
   $('#endTitle').textContent = `Brawo, ${save.name}!`;
@@ -83,25 +133,130 @@ function onWin(adv) {
   say(`Brawo! ${adv.winText}`);
 }
 
-// Ekran imienia
-$('#namePup').innerHTML = ART.pupFace;
-function askName() {
+$('#toMapBtn').addEventListener('click', () => showMap({ unlocked: current?.unlocked, questNew: current?.questNew }));
+$('#againBtn').addEventListener('click', () => { endScreen.hidden = true; startPlace(current.place); });
+mapBtn.addEventListener('click', () => showMap());
+$('#soundBtn').addEventListener('click', (e) => {
+  setSound(!soundOn());
+  e.currentTarget.textContent = 'Głos: ' + (soundOn() ? 'włączony' : 'wyłączony');
+  e.currentTarget.setAttribute('aria-pressed', String(soundOn()));
+});
+
+// ---------- Ekran startowy ----------
+const startBody = $('#startBody');
+let pendingSlot = null; // slot, w którym powstaje nowa gra
+
+function stars(s) { return s.done.length; }
+
+function showStart() {
   clear();
-  mapBtn.hidden = true;
-  albumBtn.hidden = true;
-  albumScreen.hidden = true;
-  endScreen.hidden = true;
+  stopSpeech();
+  hideOverlays();
+  setTopBar('start');
+  startScreen.hidden = false;
+  const all = loadAll();
+  const last = all.last !== null ? all.slots[all.last] : null;
+  const any = all.slots.some(Boolean);
+  startBody.innerHTML = `
+    <div class="start-hero">${ART.pupFace}</div>
+    <h1 class="start-title">Pies na Tropie</h1>
+    <div class="start-btns">
+      ${last ? `<button class="btn big" type="button" data-act="continue">Graj dalej<span class="who">${last.name}</span></button>` : ''}
+      <button class="btn ${last ? 'ghost' : 'big'}" type="button" data-act="new">Nowa gra</button>
+      ${any ? '<button class="btn ghost" type="button" data-act="load">Wczytaj grę</button>' : ''}
+    </div>`;
+  startBody.querySelector('[data-act="continue"]')?.addEventListener('click', () => { say(`Hau! Wracamy, ${last.name}!`); loadSlot(all.last); });
+  startBody.querySelector('[data-act="new"]').addEventListener('click', () => {
+    const free = loadAll().slots.findIndex((x) => !x);
+    if (free >= 0) { askName(free); return; }
+    showSlots('overwrite');
+  });
+  startBody.querySelector('[data-act="load"]')?.addEventListener('click', () => showSlots('load'));
+}
+
+// Karty zapisów. Tryb 'load' wczytuje, 'overwrite' wybiera zapis do zastąpienia nową grą.
+function showSlots(mode) {
+  const all = loadAll();
+  startBody.innerHTML = `
+    <h1>${mode === 'overwrite' ? 'Wybierz zapis do zastąpienia' : 'Wczytaj grę'}</h1>
+    ${mode === 'overwrite' ? '<p>Wszystkie miejsca są zajęte.</p>' : ''}
+    <div class="slots"></div>
+    <button class="btn ghost" type="button" data-act="back">Wróć</button>`;
+  const box = startBody.querySelector('.slots');
+  all.slots.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'slot-card' + (s ? '' : ' empty');
+    box.appendChild(card);
+    const render = (confirm) => {
+      if (!s) {
+        card.innerHTML = `<button class="slot-main" type="button"><span class="slot-pic plus">+</span><span class="slot-name">Wolne miejsce</span><span class="slot-meta">Nowa gra</span></button>`;
+        card.querySelector('.slot-main').addEventListener('click', () => askName(i));
+        return;
+      }
+      if (confirm) {
+        const replace = mode === 'overwrite';
+        card.innerHTML = `<div class="slot-confirm"><span class="slot-name">${s.name}</span><span class="slot-q">${replace ? 'Zastąpić nową grą?' : 'Usunąć ten zapis?'}</span><div class="slot-confirm-btns"><button class="btn danger" type="button" data-c="yes">${replace ? 'Tak, zastąp' : 'Tak, usuń'}</button><button class="btn ghost" type="button" data-c="no">Nie</button></div></div>`;
+        card.querySelector('[data-c="yes"]').addEventListener('click', () => {
+          if (replace) { askName(i); return; }
+          deleteSlot(i);
+          if (slot === i) { slot = null; save = null; }
+          if (loadAll().slots.some(Boolean)) showSlots('load'); else showStart();
+        });
+        card.querySelector('[data-c="no"]').addEventListener('click', () => render(false));
+        return;
+      }
+      card.innerHTML = `<button class="slot-main" type="button"><span class="slot-pic">${ART.pupFace}</span><span class="slot-name">${s.name}</span><span class="slot-meta"><span class="slot-stars">${ART.star}<b>${stars(s)}</b></span> · ${whenText(s.updated)}</span></button>${mode === 'load' ? '<button class="slot-del" type="button" aria-label="Usuń zapis">Usuń</button>' : ''}`;
+      card.querySelector('.slot-main').addEventListener('click', () => {
+        if (mode === 'overwrite') { render(true); return; }
+        say(`Hau! Wracamy, ${s.name}!`);
+        loadSlot(i);
+      });
+      card.querySelector('.slot-del')?.addEventListener('click', () => render(true));
+    };
+    render(false);
+  });
+  startBody.querySelector('[data-act="back"]').addEventListener('click', showStart);
+}
+
+function loadSlot(i) {
+  const all = loadAll();
+  if (!all.slots[i]) { showStart(); return; }
+  slot = i;
+  save = all.slots[i];
+  writeSave(); // zapamiętuje ten zapis jako ostatnio grany
+  const resume = save.resume && ALL_PLACES.find((p) => p.id === save.resume.place);
+  current = null;
+  if (resume) { startPlace(resume); return; }
+  showMap({ greet: true });
+}
+
+menuBtn.addEventListener('click', () => { writeSave(); showStart(); });
+
+// ---------- Imię pieska ----------
+$('#namePup').innerHTML = ART.pupFace;
+function askName(newSlot) {
+  clear();
+  hideOverlays();
+  setTopBar('name');
+  pendingSlot = Number.isInteger(newSlot) ? newSlot : null;
   nameScreen.hidden = false;
-  nameInput.value = save.name || '';
+  nameInput.value = pendingSlot === null && save ? save.name : '';
   setTimeout(() => { try { nameInput.focus({ preventScroll: true }); } catch (e) { /* ok */ } }, 200);
 }
 function confirmName() {
   let n = nameInput.value.trim() || 'Burek';
   n = n.charAt(0).toUpperCase() + n.slice(1).toLowerCase();
-  save.name = n;
-  writeSave(save);
+  if (pendingSlot !== null) {
+    slot = pendingSlot;
+    save = newSave(n);
+    pendingSlot = null;
+  } else {
+    save.name = n;
+  }
+  writeSave();
   nameScreen.hidden = true;
   say(`Hau hau! Mam na imię ${n}!`);
+  current = null;
   setTimeout(() => showMap({ greet: true }), 1800);
 }
 nameInput.addEventListener('input', () => {
@@ -112,19 +267,10 @@ document.querySelectorAll('#sugg button').forEach((b) => {
   b.addEventListener('click', () => { nameInput.value = b.textContent; say(b.textContent); });
 });
 $('#startBtn').addEventListener('click', confirmName);
-$('#renameBtn').addEventListener('click', askName);
+$('#nameBack').addEventListener('click', () => { pendingSlot = null; if (save) showMap(); else showStart(); });
+renameBtn.addEventListener('click', () => askName());
 
-// Przyciski
-$('#toMapBtn').addEventListener('click', () => showMap({ unlocked: current?.unlocked, questNew: current?.questNew }));
-$('#againBtn').addEventListener('click', () => { endScreen.hidden = true; startPlace(current.place); });
-mapBtn.addEventListener('click', () => showMap());
-$('#soundBtn').addEventListener('click', (e) => {
-  setSound(!soundOn());
-  e.currentTarget.textContent = 'Głos: ' + (soundOn() ? 'włączony' : 'wyłączony');
-  e.currentTarget.setAttribute('aria-pressed', String(soundOn()));
-});
-
-// Album przyjaciół
+// ---------- Album przyjaciół ----------
 function showAlbum() {
   const cards = $('#cards');
   cards.innerHTML = '';
@@ -140,18 +286,16 @@ function showAlbum() {
       : `<span class="card-pic">${ART.question}</span><span class="card-name">${f.place}</span>`;
     c.addEventListener('click', () => {
       if (met) say(`${f.name}. ${f.line}`);
-      else if (f.soon) say(`${f.place}. Tu jeszcze budujemy. Wkrótce poznasz nowego przyjaciela!`);
       else say(`${f.place}. Pomóż tam zwierzątku, a pojawi się w albumie!`);
     });
     cards.appendChild(c);
   }
   albumScreen.hidden = false;
-  const words = ['', 'jednego przyjaciela', 'dwóch przyjaciół', 'trzech przyjaciół', 'czterech przyjaciół', 'pięciu przyjaciół'];
+  const words = ['', 'jednego przyjaciela', 'dwóch przyjaciół', 'trzech przyjaciół', 'czterech przyjaciół', 'pięciu przyjaciół', 'sześciu przyjaciół', 'siedmiu przyjaciół'];
   say(count ? `Twój album! Masz już ${words[count] || count + ' przyjaciół'}. Kliknij obrazek.` : 'Twój album jest pusty. Pomóż zwierzątkom, a pojawią się tutaj!');
 }
 albumBtn.addEventListener('click', showAlbum);
 $('#albumClose').addEventListener('click', () => { albumScreen.hidden = true; });
 
-// Start: jeśli piesek ma już imię, od razu mapa
-if (save.name) showMap({ greet: true });
-else askName();
+// Gra zawsze zaczyna od ekranu startowego
+showStart();
