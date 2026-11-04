@@ -283,6 +283,12 @@ export function runScene(root, adv, ctx) {
         return taken;
       },
     },
+    // Piesek idzie w podane miejsce (np. żeby zrobić miejsce gościom)
+    walk: (x, b) => walkTo(x, b),
+    // Stan przygody wieloetapowej (zapisywany w save.flags) i powrót na mapę
+    state: ctx.state || {},
+    saveState() { if (ctx.saveState) ctx.saveState(); },
+    toMap(short, full) { showBubble('dog', short, full); if (ctx.pulseMap) ctx.pulseMap(); },
     // Czy piesek trzyma przedmiot wyjęty z plecaka
     get held() { return held; },
     // Rząd ikon w zadaniu u góry (np. 3 orzechy do zebrania)

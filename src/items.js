@@ -2,6 +2,10 @@
 // Formy: [1 orzech, 2–4 orzechy, 5+ orzechów] – do czytania na głos.
 export const ITEMS = {
   nut: { art: 'nut', forms: ['orzech', 'orzechy', 'orzechów'] },
+  invite: { art: 'invite', forms: ['zaproszenie', 'zaproszenia', 'zaproszeń'] },
+  egg: { art: 'egg', forms: ['koszyk jajek', 'koszyki jajek', 'koszyków jajek'] },
+  flower: { art: 'flower', forms: ['bukiet kwiatów', 'bukiety kwiatów', 'bukietów kwiatów'] },
+  mushroom: { art: 'mushroom', forms: ['grzybek', 'grzybki', 'grzybków'] },
 };
 
 const NUM = ['zero', 'jeden', 'dwa', 'trzy', 'cztery', 'pięć', 'sześć', 'siedem', 'osiem', 'dziewięć', 'dziesięć'];

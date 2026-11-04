@@ -213,7 +213,35 @@ const mushrooms = `<svg viewBox="0 0 100 70"><ellipse cx="50" cy="66" rx="44" ry
 
 const stone = `<svg viewBox="0 0 110 60"><ellipse cx="56" cy="56" rx="50" ry="5" fill="#0002"/><path d="M10 54 C6 30 30 10 56 12 C84 12 106 32 100 54 Z" fill="#A3AAA0"/><path d="M28 30 q14 -12 34 -8" stroke="#C3C9C0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M70 48 q10 -6 20 0" stroke="#8C9389" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M14 52 q4 -8 10 -2 q4 -8 8 2" fill="#5DB048"/></svg>`;
 
+// ---------- Urodziny kotka ----------
+const invite = `<svg viewBox="0 0 44 36"><rect x="2" y="4" width="40" height="28" rx="4" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="2"/><path d="M3 6 L22 20 L41 6" stroke="#E6DCC0" stroke-width="2.5" fill="none"/><path d="M22 28 C14 22 15 16 19 16 C21 16 22 18 22 18 C22 18 23 16 25 16 C29 16 30 22 22 28 Z" fill="#E2525C"/></svg>`;
+
+const egg = `<svg viewBox="0 0 44 40"><ellipse cx="14" cy="18" rx="7" ry="9" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="1.5"/><ellipse cx="30" cy="17" rx="7" ry="9" fill="#F3E2C8" stroke="#E0CBA8" stroke-width="1.5"/><ellipse cx="22" cy="15" rx="7" ry="9" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="1.5"/><path d="M4 22 h36 l-4 14 a3 3 0 0 1 -3 2 h-22 a3 3 0 0 1 -3 -2 z" fill="#C98E55"/><path d="M8 27 h28 M10 32 h24" stroke="#A8743E" stroke-width="2"/></svg>`;
+
+const flower = `<svg viewBox="0 0 44 44"><path d="M22 40 L14 22 M22 40 L22 18 M22 40 L30 22" stroke="#4E9E3C" stroke-width="3" stroke-linecap="round"/>${[[14, 18, '#F7A2C0'], [22, 12, '#FFD25A'], [30, 18, '#F7A2C0']].map(([x, y, c]) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-5" rx="3.6" ry="5" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="2.8" fill="#F08A24"/></g>`).join('')}<path d="M14 34 L30 34 L26 40 L18 40 Z" fill="#7FC7E8"/></svg>`;
+
+const mushroom = `<svg viewBox="0 0 40 40"><rect x="15" y="20" width="10" height="16" rx="4" fill="#FFFBF0"/><path d="M3 23 C3 6 37 6 37 23 Z" fill="#E2525C"/><circle cx="13" cy="15" r="3" fill="#FFFBF0"/><circle cx="24" cy="11" r="2.6" fill="#FFFBF0"/><circle cx="29" cy="18" r="2.4" fill="#FFFBF0"/></svg>`;
+
+const nest = `<svg viewBox="0 0 110 60"><ellipse cx="55" cy="54" rx="50" ry="5" fill="#0002"/><path d="M6 36 C10 60 100 60 104 36 Z" fill="#D9B24E"/><path d="M10 38 q20 8 40 0 q20 8 50 0 M14 46 q20 6 40 0 q20 6 40 0" stroke="#B8902E" stroke-width="3" fill="none"/><path d="M6 36 q6 -8 14 -2 q8 -8 16 0 q8 -8 16 0 q8 -8 16 0 q8 -8 16 0 q8 -6 14 2" stroke="#E8C75E" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
+const nestEggs = nest.replace('</svg>', `<ellipse cx="40" cy="30" rx="9" ry="11" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="2"/><ellipse cx="58" cy="28" rx="9" ry="11" fill="#F3E2C8" stroke="#E0CBA8" stroke-width="2"/><ellipse cx="74" cy="31" rx="9" ry="11" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="2"/></svg>`);
+
+const lilies = `<svg viewBox="0 0 100 50"><ellipse cx="30" cy="38" rx="26" ry="9" fill="#4E9E3C"/><ellipse cx="72" cy="40" rx="22" ry="8" fill="#5DB048"/>${[[30, 28, '#F7A2C0'], [72, 32, '#FFFBF0']].map(([x, y, c]) => `<g transform="translate(${x} ${y})">${[0, 60, 120, 180, 240, 300].map((a) => `<ellipse cx="0" cy="-7" rx="4" ry="8" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="4" fill="#FFD25A"/></g>`).join('')}</svg>`;
+
+const table = (stuff) => `<svg viewBox="0 0 140 100">
+<rect x="18" y="58" width="8" height="40" rx="3" fill="#B8864E"/><rect x="114" y="58" width="8" height="40" rx="3" fill="#B8864E"/>
+<path d="M4 50 h132 v10 a4 4 0 0 1 -4 4 h-124 a4 4 0 0 1 -4 -4 z" fill="#FFFBF0"/>
+<path d="M4 60 q11 10 22 0 q11 10 22 0 q11 10 22 0 q11 10 22 0 q11 10 22 0 q11 10 22 0" fill="#F7A2C0"/>
+${stuff.cake ? `<rect x="34" y="20" width="42" height="30" rx="5" fill="#F7D3A8"/><rect x="34" y="20" width="42" height="9" rx="4" fill="#FFFBF0"/><path d="M34 29 q5 6 10 0 q5 6 11 0 q5 6 10 0 q5 6 11 0" fill="#FFFBF0"/><circle cx="44" cy="38" r="3" fill="#E2525C"/><circle cx="56" cy="40" r="3" fill="#E2525C"/><circle cx="67" cy="38" r="3" fill="#E2525C"/><rect x="53" y="6" width="4" height="14" rx="2" fill="#7FC7E8"/><path d="M55 0 q4 4 0 7 q-4 -3 0 -7" fill="#FFD25A"/>` : ''}
+${stuff.flowers ? `<path d="M94 50 L90 24 M100 50 L100 18 M106 50 L110 24" stroke="#4E9E3C" stroke-width="3"/>${[[90, 22, '#F7A2C0'], [100, 16, '#FFD25A'], [110, 22, '#F7A2C0']].map(([x, y, c]) => `<g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-5" rx="4" ry="5.5" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="3" fill="#F08A24"/></g>`).join('')}<path d="M90 36 h20 l-3 14 h-14 z" fill="#7FC7E8"/>` : ''}
+</svg>`;
+
+const balloons = `<svg viewBox="0 0 80 130"><path d="M20 50 q6 30 18 78 M40 40 q2 40 0 88 M60 52 q-6 30 -20 76" stroke="#9AA38E" stroke-width="1.5" fill="none"/><ellipse cx="20" cy="30" rx="16" ry="20" fill="#E2525C"/><ellipse cx="40" cy="20" rx="16" ry="20" fill="#FFD25A"/><ellipse cx="60" cy="32" rx="16" ry="20" fill="#7FC7E8"/><ellipse cx="14" cy="22" rx="4" ry="6" fill="#fff" opacity=".5"/><ellipse cx="34" cy="12" rx="4" ry="6" fill="#fff" opacity=".5"/><ellipse cx="54" cy="24" rx="4" ry="6" fill="#fff" opacity=".5"/></svg>`;
+
+const cake = `<svg viewBox="0 0 44 44"><rect x="6" y="18" width="32" height="22" rx="4" fill="#F7D3A8"/><rect x="6" y="18" width="32" height="7" rx="3" fill="#FFFBF0"/><path d="M6 25 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 8 0" fill="#FFFBF0"/><circle cx="14" cy="32" r="2.5" fill="#E2525C"/><circle cx="22" cy="33" r="2.5" fill="#E2525C"/><circle cx="30" cy="32" r="2.5" fill="#E2525C"/><rect x="20" y="6" width="4" height="12" rx="2" fill="#7FC7E8"/><path d="M22 0 q4 3 0 6 q-4 -3 0 -6" fill="#FFD25A"/></svg>`;
+
 export const ART = {
+  invite, egg, flower, mushroom, nest, nestEggs, lilies, balloons, cake,
+  table: table({}), tableCake: table({ cake: true }), tableFlowers: table({ flowers: true }), tableFull: table({ cake: true, flowers: true }),
   backpack, nut, squirrel, pine, leafPile, log, mushrooms, stone,
   yarn, bush, tree, cat, dog, pupFace, parcel, duckIcon,
   duck: duck(false), duckHat: duck(true), owl, frog, hedgehog, reeds, barn, lock, star,

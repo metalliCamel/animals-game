@@ -27,6 +27,7 @@ export function runMap(root, ctx) {
       </svg>
       <div class="map-title">Dokąd idziemy?</div>
     </div>`;
+  const quest = ctx.quest;
   const map = root.firstElementChild;
 
   const btns = {};
@@ -39,8 +40,9 @@ export function runMap(root, ctx) {
     b.style.top = p.y + '%';
     b.setAttribute('aria-label', p.label);
     b.innerHTML = `
-      <span class="disc">${ART[p.icon]}${st === 'locked' || st === 'soon' ? `<span class="badge lock">${ART.lock}</span>` : ''}${st === 'done' ? `<span class="badge">${ART.star}</span>` : ''}</span>
+      <span class="disc">${ART[p.icon]}${st === 'locked' || st === 'soon' ? `<span class="badge lock">${ART.lock}</span>` : ''}${st === 'done' ? `<span class="badge">${ART.star}</span>` : ''}${quest && quest.todo(p.id) ? `<span class="qbadge">${ART.balloons}</span>` : ''}</span>
       <span class="label">${p.label}</span>`;
+    if (quest && quest.todo(p.id)) b.classList.add('quest');
     b.addEventListener('click', () => pick(p, st));
     map.appendChild(b);
     btns[p.id] = b;
@@ -77,8 +79,24 @@ export function runMap(root, ctx) {
 
   function bump(p) { const b = btns[p.id]; b.classList.remove('nope'); void b.offsetWidth; b.classList.add('nope'); }
 
+  // Lista zadań przygody wieloetapowej
+  if (quest && quest.started) {
+    const chip = document.createElement('div');
+    chip.className = 'chip map-chip';
+    chip.innerHTML = `<span class="ic">${ART.cake}</span><span class="t">${quest.title}</span><span class="tray">${quest.list.map((c) => `<span class="clue${c.ok ? '' : ' dim'}">${ART[c.art]}</span>`).join('')}</span>`;
+    map.appendChild(chip);
+  }
+
   // Komunikat po powrocie z przygody
-  if (ctx.unlocked) {
+  if (ctx.questNew) {
+    timers.push(setTimeout(() => say('Psst! Kotek cię woła! Ma dla ciebie ważną sprawę. Kliknij łąkę z balonikiem!'), 400));
+  } else if (quest) {
+    const places = PLACES.filter((p) => quest.todo(p.id)).map((p) => p.label);
+    const hi = ctx.greet ? `Cześć, ${save.name}! ` : '';
+    timers.push(setTimeout(() => say(quest.started
+      ? `${hi}Baloniki pokazują, gdzie jest coś do zrobienia: ${places.join(', ')}.`
+      : `${hi}Kotek cię woła! Kliknij łąkę z balonikiem.`), 300));
+  } else if (ctx.unlocked) {
     const p = PLACES.find((x) => x.id === ctx.unlocked);
     btns[p.id].classList.add('fresh');
     timers.push(setTimeout(() => say(`Hura! Nowe miejsce na mapie: ${p.label}! Kliknij, żeby tam pójść.`), 400));

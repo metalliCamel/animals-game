@@ -26,6 +26,7 @@ Vercel wykrywa Vite automatycznie: zaimportuj repo w Vercel (Framework: Vite, bu
 - `src/scene.js` – silnik przygody (ruch pieska, dymki, podpowiedzi, wygrana)
 - `src/map.js` – mapa świata i odblokowywanie miejsc
 - `src/adventures/` – jedna przygoda = jeden plik; lista miejsc w `index.js`
+- `src/quests/` – przygody wieloetapowe: scena dla każdego miejsca, stan w `save.flags`, funkcja `todo` do znaczników na mapie
 - `src/art.js` – grafiki postaci (SVG)
 - `src/save.js` – zapis postępu w przeglądarce
 
@@ -36,6 +37,8 @@ Vercel wykrywa Vite automatycznie: zaimportuj repo w Vercel (Framework: Vite, bu
 3. **Kto zjadł marchewki?** (Farma) – zagadka: ślady kopytek i druga wskazówka (biała sierść albo błoto) wskazują sprawcę, losowo kozę albo świnkę.
 
 4. **Orzechy na zimę** (Las) – zebranie trzech orzechów do plecaka i oddanie ich wiewiórce.
+
+5. **Urodziny kotka** (wszystkie miejsca) – przygoda wieloetapowa po ukończeniu lasu. Zaproszenia od kotka trzeba roznieść kaczce, królikowi i wiewiórce, jajka są w gniazdku na farmie, a kwiatki daje żabka w zamian za czerwonego grzybka z lasu. Na końcu przyjęcie na łące. Baloniki na mapie pokazują, gdzie jest coś do zrobienia.
 
 Album przyjaciół (z mapy) zbiera zwierzątka z ukończonych przygód.
 

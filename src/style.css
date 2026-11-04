@@ -138,6 +138,15 @@ body {
 .map-pup { position: absolute; width: 9%; transform: translate(-50%, -50%); transition-property: left, top; transition-timing-function: ease-in-out; z-index: 5; pointer-events: none; filter: drop-shadow(0 4px 0 #0002); }
 .map-pup svg { width: 100%; height: auto; display: block; }
 
+/* Przygoda wieloetapowa na mapie */
+.place .qbadge { position: absolute; left: -10%; top: -26%; width: 34%; animation: float 2.4s ease-in-out infinite; }
+.place .qbadge svg { width: 100%; height: auto; display: block; }
+.place.quest .disc { box-shadow: 0 0 0 6px #FFD25A99, 0 6px 0 #0002; }
+@keyframes float { 50% { transform: translateY(-10%); } }
+.map-chip { top: auto; bottom: 4%; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.btn.pulse { animation: glowbtn 1.1s ease-in-out infinite; }
+@keyframes glowbtn { 50% { box-shadow: 0 0 0 6px #FFD25A, 0 4px 0 #CFC7AE; } }
+
 /* Nakładki */
 .overlay { position: absolute; inset: 0; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: #FFFBF0EE; text-align: center; padding: 4%; }
 .overlay h1 { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 5vw, 56px); margin: 0; color: var(--leaf); text-wrap: balance; line-height: 1.05; }

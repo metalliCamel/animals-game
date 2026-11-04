@@ -5,6 +5,7 @@ import { loadSave, writeSave } from './save.js';
 import { runScene } from './scene.js';
 import { runMap } from './map.js';
 import { ADVENTURES, PLACES, FRIENDS } from './adventures/index.js';
+import party from './quests/party.js';
 
 const $ = (s) => document.querySelector(s);
 const world = $('#world');
@@ -27,20 +28,44 @@ let current = null; // { place, adventure }
 
 function clear() { if (destroy) destroy(); destroy = null; }
 
+// Przygoda wieloetapowa: aktywna po ukończeniu wymaganej przygody, do czasu jej końca
+const QUEST = party;
+const questActive = () => save.done.includes(QUEST.after) && !save.done.includes(QUEST.id);
+function questState() {
+  if (!save.flags[QUEST.id]) save.flags[QUEST.id] = {};
+  return QUEST.initState(save.flags[QUEST.id]);
+}
+const bagCount = (id) => save.bag.filter((x) => x === id).length;
+function questInfo() {
+  if (!questActive()) return null;
+  const st = questState();
+  return { title: QUEST.title, list: QUEST.checklist(st), todo: (placeId) => QUEST.todo(placeId, st, bagCount), start: QUEST.start, started: !!st.started };
+}
+
 function showMap(extra = {}) {
   clear();
   endScreen.hidden = true;
   albumScreen.hidden = true;
   mapBtn.hidden = true;
+  mapBtn.classList.remove('pulse');
   albumBtn.hidden = false;
-  destroy = runMap(world, { save, at: current?.place.id, onPick: startPlace, ...extra });
+  destroy = runMap(world, { save, at: current?.place.id, onPick: startPlace, quest: questInfo(), ...extra });
 }
 
 function startPlace(place) {
   clear();
-  current = { place, adventure: ADVENTURES[place.adventure] };
   mapBtn.hidden = false;
   albumBtn.hidden = true;
+  if (questActive() && QUEST.scenes[place.id]) {
+    const scene = { ...QUEST.scenes[place.id], id: QUEST.id, sticker: QUEST.sticker, winText: QUEST.winText };
+    current = { place, adventure: scene };
+    destroy = runScene(world, scene, {
+      name: save.name, bag, onWin, state: questState(), saveState: () => writeSave(save),
+      pulseMap: () => mapBtn.classList.add('pulse'),
+    });
+    return;
+  }
+  current = { place, adventure: ADVENTURES[place.adventure] };
   destroy = runScene(world, current.adventure, { name: save.name, bag, onWin });
 }
 
@@ -49,6 +74,7 @@ function onWin(adv) {
   if (first) { save.done.push(adv.id); writeSave(save); }
   const unlocked = first ? PLACES.find((p) => p.after === adv.id && !p.soon) : null;
   current.unlocked = unlocked ? unlocked.id : null;
+  current.questNew = first && adv.id === QUEST.after;
 
   $('#sticker').innerHTML = `${ART.star}<span class="sticker-pic">${ART[adv.sticker]}</span>`;
   $('#endTitle').textContent = `Brawo, ${save.name}!`;
@@ -89,7 +115,7 @@ $('#startBtn').addEventListener('click', confirmName);
 $('#renameBtn').addEventListener('click', askName);
 
 // Przyciski
-$('#toMapBtn').addEventListener('click', () => showMap({ unlocked: current?.unlocked }));
+$('#toMapBtn').addEventListener('click', () => showMap({ unlocked: current?.unlocked, questNew: current?.questNew }));
 $('#againBtn').addEventListener('click', () => { endScreen.hidden = true; startPlace(current.place); });
 mapBtn.addEventListener('click', () => showMap());
 $('#soundBtn').addEventListener('click', (e) => {
