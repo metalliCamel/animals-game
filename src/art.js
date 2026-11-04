@@ -100,7 +100,86 @@ const lock = `<svg viewBox="0 0 40 40"><rect x="8" y="18" width="24" height="18"
 
 const star = `<svg viewBox="0 0 40 40"><path d="M20 2 L25 14 L38 15 L28 23 L31 37 L20 30 L9 37 L12 23 L2 15 L15 14 Z" fill="#FFD25A" stroke="#E0A92E" stroke-width="2" stroke-linejoin="round"/></svg>`;
 
+// ---------- Farma ----------
+const rabbit = `<svg viewBox="0 0 90 120">
+<ellipse cx="33" cy="26" rx="9" ry="26" fill="#E9E4DC" transform="rotate(-8 33 26)"/><ellipse cx="33" cy="28" rx="4.5" ry="18" fill="#F7C9C9" transform="rotate(-8 33 28)"/>
+<ellipse cx="57" cy="26" rx="9" ry="26" fill="#E9E4DC" transform="rotate(8 57 26)"/><ellipse cx="57" cy="28" rx="4.5" ry="18" fill="#F7C9C9" transform="rotate(8 57 28)"/>
+<ellipse cx="45" cy="92" rx="28" ry="26" fill="#E9E4DC"/><ellipse cx="45" cy="98" rx="16" ry="16" fill="#FFFBF0"/>
+<circle cx="72" cy="104" r="8" fill="#FFFBF0"/>
+<circle cx="45" cy="60" r="22" fill="#E9E4DC"/>
+<circle cx="37" cy="56" r="4" fill="#2E3A2A"/><circle cx="53" cy="56" r="4" fill="#2E3A2A"/><circle cx="38.3" cy="54.7" r="1.3" fill="#fff"/><circle cx="54.3" cy="54.7" r="1.3" fill="#fff"/>
+<path d="M42 64 L48 64 L45 68 Z" fill="#F08CA0"/><rect x="42" y="69" width="6" height="6" rx="1.5" fill="#FFFBF0" stroke="#CFC7AE"/>
+<ellipse cx="32" cy="66" rx="4" ry="2.5" fill="#F7A2A2" opacity=".7"/><ellipse cx="58" cy="66" rx="4" ry="2.5" fill="#F7A2A2" opacity=".7"/>
+<ellipse cx="32" cy="116" rx="9" ry="4" fill="#D8D1C6"/><ellipse cx="58" cy="116" rx="9" ry="4" fill="#D8D1C6"/>
+</svg>`;
+
+const chicken = `<svg viewBox="0 0 80 84">
+<path d="M34 64 L30 80 M30 80 l-6 3 M30 80 l6 3 M48 64 L50 80 M50 80 l-6 3 M50 80 l6 3" stroke="#F08A24" stroke-width="3" stroke-linecap="round"/>
+<path d="M8 40 L2 26 L14 32 L10 18 L22 30 Z" fill="#B8642E"/>
+<ellipse cx="38" cy="48" rx="26" ry="20" fill="#D9803F"/>
+<path d="M26 46 q10 12 22 2" stroke="#B8642E" stroke-width="4" fill="none" stroke-linecap="round"/>
+<circle cx="58" cy="28" r="14" fill="#D9803F"/>
+<path d="M50 16 q2 -8 6 -2 q2 -8 6 0 q4 -6 5 2" fill="#E2525C"/>
+<path d="M71 28 L80 31 L71 34 Z" fill="#F7C43A"/><path d="M68 36 q3 6 0 8 q-4 -2 -2 -8" fill="#E2525C"/>
+<circle cx="62" cy="25" r="3" fill="#2E3A2A"/><circle cx="63" cy="24" r="1" fill="#fff"/>
+</svg>`;
+
+const pig = `<svg viewBox="0 0 120 84">
+<path d="M14 40 q-10 -4 -6 -12 q6 -4 6 4" stroke="#F09AAE" stroke-width="4" fill="none" stroke-linecap="round"/>
+<rect x="28" y="56" width="12" height="24" rx="5" fill="#F09AAE"/><rect x="66" y="56" width="12" height="24" rx="5" fill="#F09AAE"/>
+<ellipse cx="54" cy="48" rx="40" ry="26" fill="#F7B6C4"/>
+<rect x="40" y="60" width="12" height="22" rx="5" fill="#F7B6C4"/><rect x="78" y="58" width="12" height="24" rx="5" fill="#F7B6C4"/>
+<rect x="40" y="72" width="12" height="10" rx="4" fill="#8A5528"/><rect x="78" y="72" width="12" height="10" rx="4" fill="#8A5528"/><rect x="28" y="70" width="12" height="10" rx="4" fill="#7A4A22"/>
+<ellipse cx="34" cy="38" rx="8" ry="5" fill="#8A5528" opacity=".7"/><ellipse cx="60" cy="60" rx="7" ry="4" fill="#8A5528" opacity=".6"/>
+<circle cx="94" cy="38" r="20" fill="#F7B6C4"/>
+<path d="M82 22 L80 6 L94 18 Z M104 20 L110 6 L112 24 Z" fill="#F09AAE"/>
+<ellipse cx="110" cy="44" rx="10" ry="8" fill="#F09AAE"/><circle cx="107" cy="44" r="2" fill="#B8566E"/><circle cx="113" cy="44" r="2" fill="#B8566E"/>
+<circle cx="96" cy="32" r="3.5" fill="#2E3A2A"/><circle cx="97" cy="31" r="1.1" fill="#fff"/>
+</svg>`;
+
+const goat = `<svg viewBox="0 0 110 100">
+<rect x="26" y="62" width="10" height="30" rx="4" fill="#E9E4DC"/><rect x="62" y="62" width="10" height="30" rx="4" fill="#E9E4DC"/>
+<path d="M26 90 h10 v6 h-10 z M62 90 h10 v6 h-10 z" fill="#5E4227"/>
+<path d="M14 46 L6 38 L16 40 Z" fill="#FFFFFF"/>
+<ellipse cx="50" cy="56" rx="36" ry="20" fill="#FFFFFF" stroke="#E2DCD0" stroke-width="2"/>
+<rect x="36" y="64" width="10" height="30" rx="4" fill="#FFFFFF"/><rect x="72" y="62" width="10" height="32" rx="4" fill="#FFFFFF"/>
+<path d="M36 92 h10 v6 h-10 z M72 92 h10 v6 h-10 z" fill="#5E4227"/>
+<path d="M78 22 C72 6 86 2 88 14 M92 20 C92 4 106 4 102 18" stroke="#B8A27E" stroke-width="5" fill="none" stroke-linecap="round"/>
+<ellipse cx="90" cy="36" rx="16" ry="18" fill="#FFFFFF" stroke="#E2DCD0" stroke-width="2"/>
+<path d="M74 30 L62 26 L72 36 Z M106 30 L110 24 L104 36 Z" fill="#F1E6D6"/>
+<circle cx="86" cy="32" r="3.2" fill="#2E3A2A"/><circle cx="98" cy="32" r="3.2" fill="#2E3A2A"/>
+<ellipse cx="92" cy="46" rx="6" ry="4" fill="#F7C9C9"/>
+<path d="M88 52 L92 66 L96 52 Z" fill="#E2DCD0"/>
+</svg>`;
+
+const fence = (extra) => `<svg viewBox="0 0 120 70">
+<rect x="10" y="10" width="10" height="60" rx="3" fill="#B8864E"/><rect x="55" y="10" width="10" height="60" rx="3" fill="#B8864E"/><rect x="100" y="10" width="10" height="60" rx="3" fill="#B8864E"/>
+<rect x="2" y="22" width="116" height="10" rx="4" fill="#C99A5E"/><rect x="2" y="46" width="116" height="10" rx="4" fill="#C99A5E"/>
+${extra || ''}
+</svg>`;
+const furTuft = `<g><path d="M70 20 q6 -10 12 -2 q8 -6 10 4 q8 2 2 10 q-6 6 -14 2 q-10 4 -12 -4 q-6 -6 2 -10 z" fill="#FFFFFF" stroke="#D8D1C6" stroke-width="2"/></g>`;
+const mudSplat = `<g fill="#8A5528"><ellipse cx="80" cy="50" rx="12" ry="7"/><circle cx="66" cy="44" r="4"/><circle cx="96" cy="44" r="3.5"/><circle cx="74" cy="60" r="3"/><circle cx="90" cy="58" r="4"/></g>`;
+
+const patch = (full) => `<svg viewBox="0 0 140 60">
+<ellipse cx="70" cy="40" rx="66" ry="18" fill="#8A5528"/><ellipse cx="70" cy="36" rx="60" ry="13" fill="#9E6634"/>
+${[24, 50, 76, 102, 120].map((x, i) => full
+    ? `<path d="M${x} 32 q-6 -18 -2 -24 M${x} 32 q2 -20 6 -24 M${x} 32 q8 -14 12 -16" stroke="#4E9E3C" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M${x - 6} 32 q6 14 12 0 z" fill="#F08A24"/>`
+    : `<path d="M${x} 34 l-3 -6 M${x} 34 l1 -7 M${x} 34 l4 -5" stroke="#6C8F3A" stroke-width="3" stroke-linecap="round"/>${i % 2 ? `<circle cx="${x + 8}" cy="40" r="2.5" fill="#F08A24"/>` : ''}`).join('')}
+</svg>`;
+
+const carrot = `<svg viewBox="0 0 40 40"><path d="M22 10 q-4 -8 -10 -6 M22 10 q2 -9 8 -8 M22 10 q8 -4 12 0" stroke="#4E9E3C" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M14 12 Q8 30 4 38 Q14 32 30 16 Q22 8 14 12 Z" fill="#F08A24"/><path d="M12 20 l5 2 M9 27 l4 2" stroke="#C96A14" stroke-width="2" stroke-linecap="round"/></svg>`;
+
+const hoofPrint = `<g fill="#5E4227"><path d="M0 10 C0 0 8 0 8 6 L8 18 C4 20 0 16 0 10 Z"/><path d="M18 10 C18 0 10 0 10 6 L10 18 C14 20 18 16 18 10 Z"/></g>`;
+const hoof = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#F1E6D6"/><g transform="translate(11 9)">${hoofPrint}</g></svg>`;
+const hoofTrail = `<svg viewBox="0 0 220 40">${[[0, 22, -10], [34, 10, 8], [68, 24, -6], [104, 8, 10], [140, 22, -4], [176, 6, 8]].map(([x, y, r]) => `<g transform="translate(${x} ${y}) rotate(${80 + r}) scale(.7)" opacity=".85">${hoofPrint}</g>`).join('')}</svg>`;
+const fur = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#DDEFF7"/><g transform="translate(-58 2)">${furTuft}</g></svg>`;
+const mud = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#F1E6D6"/><g transform="translate(-60 -30)">${mudSplat}</g></svg>`;
+const magnifier = `<svg viewBox="0 0 40 40"><circle cx="17" cy="17" r="11" fill="#DDEFF7" stroke="#2E3A2A" stroke-width="4"/><path d="M25 25 L36 36" stroke="#2E3A2A" stroke-width="6" stroke-linecap="round"/></svg>`;
+const question = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#E6E9DD"/><text x="20" y="28" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="24" fill="#9AA38E">?</text></svg>`;
+
 export const ART = {
   yarn, bush, tree, cat, dog, pupFace, parcel, duckIcon,
   duck: duck(false), duckHat: duck(true), owl, frog, hedgehog, reeds, barn, lock, star,
+  rabbit, chicken, pig, goat, fence: fence(), fenceFur: fence(furTuft), fenceMud: fence(mudSplat),
+  patchEmpty: patch(false), patchFull: patch(true), carrot, hoof, hoofTrail, fur, mud, magnifier, question,
 };

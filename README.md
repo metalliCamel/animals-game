@@ -33,5 +33,8 @@ Vercel wykrywa Vite automatycznie: zaimportuj repo w Vercel (Framework: Vite, bu
 
 1. **Zgubiony kłębek** (Łąka) – kotek zgubił kłębek wełny w krzaczkach.
 2. **Paczka dla kaczki** (Staw) – sowa listonoszka prosi o dostarczenie paczki; adresata pokazuje obrazek na paczce.
+3. **Kto zjadł marchewki?** (Farma) – zagadka: ślady kopytek i druga wskazówka (biała sierść albo błoto) wskazują sprawcę, losowo kozę albo świnkę.
 
-Wkrótce: Farma, Las.
+Album przyjaciół (z mapy) zbiera zwierzątka z ukończonych przygód.
+
+Wkrótce: Las.

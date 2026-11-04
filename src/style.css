@@ -46,6 +46,10 @@ body {
 @keyframes drift { from { transform: translateX(-30vw); } to { transform: translateX(120vw); } }
 @keyframes pulse { 50% { transform: scale(1.06); } }
 
+/* Farma */
+.hill { position: absolute; left: -10%; right: 40%; bottom: 40%; height: 26%; border-radius: 50% 50% 0 0; background: #A6D676; }
+.farm-ground { background: radial-gradient(120% 80% at 50% 0%, #9BD06A, #7DBA4E); }
+
 /* Postacie */
 .ent { position: absolute; transform: translateX(-50%); transform-origin: 50% 100%; }
 .ent svg { width: 100%; height: auto; display: block; overflow: visible; }
@@ -54,7 +58,7 @@ body {
 .shake .art { animation: shake .5s ease-in-out 2; }
 .hint .art { animation: shake .6s ease-in-out 3; }
 .happy .art { animation: hop .45s ease-in-out 4; }
-.searched { filter: saturate(.55) brightness(1.05); }
+.searched { filter: saturate(.45) brightness(1.05); opacity: .65; }
 @keyframes shake { 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
 @keyframes hop { 50% { transform: translateY(-14%); } }
 
@@ -79,6 +83,12 @@ body {
   display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: clamp(14px, 1.8vw, 20px); letter-spacing: 1px; text-transform: uppercase;
 }
 .chip.done { background: #DDF3C6; }
+.chip .tray { display: flex; gap: 6px; }
+.chip .tray:empty { display: none; }
+.chip .clue { width: 1.8em; display: block; animation: pop .5s cubic-bezier(.3, 1.6, .6, 1); }
+.chip .clue svg { width: 100%; height: auto; display: block; }
+.appear { animation: fadein .8s ease-out; }
+@keyframes fadein { from { opacity: 0; } }
 .spark { position: absolute; width: 3%; aspect-ratio: 1; z-index: 220; pointer-events: none; animation: fly 1.1s ease-out forwards; }
 @keyframes fly { to { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; } }
 
@@ -116,5 +126,17 @@ body {
 .sticker-pic { position: absolute; left: 30%; top: 32%; width: 40%; }
 .sticker-pic svg { width: 100%; height: auto; display: block; }
 @keyframes pop { from { transform: scale(0) rotate(-30deg); } }
+
+/* Album */
+.album { justify-content: center; gap: 20px; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; width: min(100%, 760px); }
+.card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 10px 12px; border: 4px dashed #CFC7AE; border-radius: 22px; background: #F3EEDF; cursor: pointer; font: inherit; color: var(--muted); }
+.card.met { border-style: solid; border-color: var(--sun); background: #fff; color: var(--ink); animation: pop .5s cubic-bezier(.3, 1.6, .6, 1); }
+.card-pic { position: relative; width: 76%; aspect-ratio: 1; }
+.card-pic svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card-star { position: absolute; right: 6px; top: 6px; width: 26%; }
+.card-star svg { width: 100%; height: auto; display: block; }
+.card-name { font-family: var(--read); font-weight: 700; font-size: clamp(14px, 2vw, 22px); letter-spacing: 1.5px; text-transform: uppercase; }
+@media (max-width: 560px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01s !important; } }

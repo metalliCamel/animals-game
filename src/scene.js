@@ -14,6 +14,11 @@ const BACKGROUNDS = {
     <div class="cloud" style="top:14%;animation-delay:-18s"></div>
     <div class="ground"></div>
     <div class="water"></div>`,
+  farm: `
+    <div class="sunball"></div>
+    <div class="cloud" style="top:12%;animation-delay:-30s"></div>
+    <div class="hill"></div>
+    <div class="ground farm-ground"></div>`,
 };
 
 const HINT_AFTER_MS = 18000;
@@ -37,7 +42,7 @@ export function runScene(root, adv, ctx) {
 
   const chip = document.createElement('div');
   chip.className = 'chip';
-  chip.innerHTML = '<span class="ic"></span><span class="t"></span>';
+  chip.innerHTML = '<span class="ic"></span><span class="t"></span><span class="tray"></span>';
   scene.appendChild(chip);
 
   const bubble = document.createElement('div');
@@ -163,6 +168,23 @@ export function runScene(root, adv, ctx) {
     hop(id) { replay(els[id], 'happy'); },
     fade(id) { els[id].classList.add('searched'); },
     setArt(id, art) { els[id].querySelector('.art').innerHTML = ART[art]; },
+    // Znaleziona wskazówka trafia do zadania u góry
+    clue(art) {
+      const c = document.createElement('span');
+      c.className = 'clue';
+      c.innerHTML = ART[art];
+      chip.querySelector('.tray').appendChild(c);
+    },
+    // Dekoracja pojawiająca się w trakcie (np. ślady na trawie)
+    spawn(id, art, x, b, w) {
+      const el = document.createElement('div');
+      el.className = 'ent appear';
+      el.innerHTML = `<div class="art">${ART[art]}</div>`;
+      place(el, x, b, w);
+      scene.appendChild(el);
+      els[id] = el;
+      data[id] = { id, art, x, b, w, deco: true };
+    },
     sparkles,
     later,
     wait: (ms) => new Promise((res) => later(ms, res)),
