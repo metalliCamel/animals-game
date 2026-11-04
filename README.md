@@ -21,6 +21,17 @@ npm run build    # build do dist/
 
 Vercel wykrywa Vite automatycznie: zaimportuj repo w Vercel (Framework: Vite, build: `npm run build`, output: `dist`). Każdy push na `main` publikuje nową wersję.
 
+## Struktura
+
+- `src/scene.js` – silnik przygody (ruch pieska, dymki, podpowiedzi, wygrana)
+- `src/map.js` – mapa świata i odblokowywanie miejsc
+- `src/adventures/` – jedna przygoda = jeden plik; lista miejsc w `index.js`
+- `src/art.js` – grafiki postaci (SVG)
+- `src/save.js` – zapis postępu w przeglądarce
+
 ## Przygody
 
-1. **Zgubiony kłębek** – kotek zgubił kłębek wełny w krzaczkach.
+1. **Zgubiony kłębek** (Łąka) – kotek zgubił kłębek wełny w krzaczkach.
+2. **Paczka dla kaczki** (Staw) – sowa listonoszka prosi o dostarczenie paczki; adresata pokazuje obrazek na paczce.
+
+Wkrótce: Farma, Las.
