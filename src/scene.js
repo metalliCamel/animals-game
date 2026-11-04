@@ -2,6 +2,7 @@
 // (mów, idź, nieś, potrząśnij, wygraj). Każda przygoda to osobny plik w src/adventures.
 import { ART } from './art.js';
 import { say, stopSpeech } from './speech.js';
+import { ITEMS, itemPhrase } from './items.js';
 
 const BACKGROUNDS = {
   meadow: `
@@ -19,6 +20,10 @@ const BACKGROUNDS = {
     <div class="cloud" style="top:12%;animation-delay:-30s"></div>
     <div class="hill"></div>
     <div class="ground farm-ground"></div>`,
+  forest: `
+    <div class="beam" style="left:20%"></div>
+    <div class="beam" style="left:58%;animation-delay:-3s"></div>
+    <div class="ground forest-ground"></div>`,
 };
 
 const HINT_AFTER_MS = 18000;
@@ -83,6 +88,101 @@ export function runScene(root, adv, ctx) {
   const carrySlot = dog.querySelector('.carry');
 
   function face(left) { flip.style.transform = left ? 'scaleX(-1)' : 'none'; }
+
+  // ---------- Plecak ----------
+  // Zawartość plecaka żyje w zapisie gry (ctx.bag), więc przechodzi między miejscami.
+  const bag = ctx.bag;
+  let held = null; // przedmiot wyjęty z plecaka, który piesek trzyma w pysku
+  const bagBtn = document.createElement('button');
+  bagBtn.type = 'button';
+  bagBtn.className = 'bagbtn';
+  bagBtn.setAttribute('aria-label', 'Plecak');
+  bagBtn.innerHTML = `<span class="bagart">${ART.backpack}</span><span class="bagcount" hidden></span>`;
+  scene.appendChild(bagBtn);
+  els.bag = bagBtn;
+  const panel = document.createElement('div');
+  panel.className = 'bagpanel';
+  panel.hidden = true;
+  scene.appendChild(panel);
+
+  function bagCounts() {
+    const c = {};
+    for (const it of bag.items) c[it] = (c[it] || 0) + 1;
+    return c;
+  }
+  function renderBag() {
+    const n = bag.items.length;
+    const badge = bagBtn.querySelector('.bagcount');
+    badge.hidden = n === 0;
+    badge.textContent = String(n);
+    bagBtn.classList.toggle('holding', !!held);
+  }
+  function openBag() {
+    const counts = bagCounts();
+    const ids = Object.keys(counts);
+    panel.innerHTML = ids.length
+      ? ids.map((id) => `<button type="button" class="slot" data-item="${id}">${ART[ITEMS[id]?.art || id]}<span class="slotn">${counts[id] > 1 ? '×' + counts[id] : ''}</span></button>`).join('')
+      : '<span class="empty">Pusto</span>';
+    panel.hidden = false;
+    say(ids.length ? 'W plecaku: ' + ids.map((id) => itemPhrase(id, counts[id])).join(', ') + '. Kliknij, żeby wyjąć.' : 'Plecak jest pusty.');
+  }
+  function holdFromBag(id) {
+    held = id;
+    carrying = id;
+    carrySlot.innerHTML = ART[ITEMS[id]?.art || id];
+    dog.classList.add('has');
+    panel.hidden = true;
+    renderBag();
+  }
+  function putBack() {
+    if (!held) return;
+    held = null;
+    carrying = null;
+    carrySlot.innerHTML = '';
+    dog.classList.remove('has');
+    renderBag();
+  }
+  bagBtn.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    if (busy || finished) return;
+    lastAct = Date.now();
+    if (held) { putBack(); say('Schowane do plecaka.'); return; }
+    if (!panel.hidden) { panel.hidden = true; return; }
+    openBag();
+  });
+  panel.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    const slot = ev.target.closest('.slot');
+    if (!slot) { panel.hidden = true; return; }
+    const id = slot.dataset.item;
+    holdFromBag(id);
+    const n = bagCounts()[id] || 0;
+    say(n > 1 ? `Wyjmuję: ${itemPhrase(id, n)}. Komu je dać?` : 'Wyjęte! Komu to dać?');
+  });
+
+  // Przedmiot leci z miejsca na planszy do plecaka
+  function flyToBag(fromId, art) {
+    const sr = scene.getBoundingClientRect();
+    const from = (els[fromId] || dog).getBoundingClientRect();
+    const to = bagBtn.getBoundingClientRect();
+    const it = document.createElement('div');
+    it.className = 'flyitem';
+    it.innerHTML = ART[art];
+    const x0 = from.left + from.width / 2 - sr.left;
+    const y0 = from.top + from.height / 3 - sr.top;
+    it.style.left = x0 + 'px';
+    it.style.top = y0 + 'px';
+    scene.appendChild(it);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      it.style.transform = `translate(${to.left + to.width / 2 - sr.left - x0}px, ${to.top + to.height / 2 - sr.top - y0}px) scale(.5)`;
+    }));
+    return new Promise((res) => setTimeout(() => {
+      it.remove();
+      replay(bagBtn, 'gulp');
+      res();
+    }, 750));
+  }
+  renderBag();
 
   function walkTo(x, b) {
     x = Math.min(Math.max(x, 7), 93);
@@ -163,7 +263,32 @@ export function runScene(root, adv, ctx) {
       chip.querySelector('.t').textContent = text;
       chip.classList.toggle('done', !!done);
     },
-    carry(art) { carrying = art; carrySlot.innerHTML = art ? ART[art] : ''; dog.classList.toggle('has', !!art); },
+    carry(art) { held = null; carrying = art; carrySlot.innerHTML = art ? ART[art] : ''; dog.classList.toggle('has', !!art); renderBag(); },
+    // Plecak: add wkłada (z animacją z miejsca `fromId`), take wyjmuje na stałe
+    bag: {
+      async add(item, fromId) {
+        await flyToBag(fromId, ITEMS[item]?.art || item);
+        bag.items.push(item);
+        bag.save();
+        renderBag();
+      },
+      count: (item) => bag.items.filter((x) => x === item).length,
+      has: (item, n = 1) => bag.items.filter((x) => x === item).length >= n,
+      take(item, n = Infinity) {
+        let taken = 0;
+        bag.items = bag.items.filter((x) => { if (x === item && taken < n) { taken++; return false; } return true; });
+        bag.save();
+        if (held === item && !bag.items.includes(item)) putBack();
+        renderBag();
+        return taken;
+      },
+    },
+    // Czy piesek trzyma przedmiot wyjęty z plecaka
+    get held() { return held; },
+    // Rząd ikon w zadaniu u góry (np. 3 orzechy do zebrania)
+    tray(arts) {
+      chip.querySelector('.tray').innerHTML = arts.map((a) => `<span class="clue${a.dim ? ' dim' : ''}">${ART[a.art || a]}</span>`).join('');
+    },
     shake(id) { replay(els[id], 'shake'); },
     hop(id) { replay(els[id], 'happy'); },
     fade(id) { els[id].classList.add('searched'); },
@@ -213,6 +338,7 @@ export function runScene(root, adv, ctx) {
   scene.addEventListener('click', async (ev) => {
     if (busy || finished) return;
     lastAct = Date.now();
+    panel.hidden = true;
     const hit = ev.target.closest('.hit');
     if (hit) {
       const id = hit.dataset.id;

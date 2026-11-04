@@ -16,6 +16,12 @@ const albumBtn = $('#albumBtn');
 const albumScreen = $('#albumScreen');
 
 const save = loadSave();
+// Plecak współdzielony przez wszystkie miejsca i zapisywany razem z grą
+const bag = {
+  get items() { return save.bag; },
+  set items(v) { save.bag = v; },
+  save() { writeSave(save); },
+};
 let destroy = null;
 let current = null; // { place, adventure }
 
@@ -35,7 +41,7 @@ function startPlace(place) {
   current = { place, adventure: ADVENTURES[place.adventure] };
   mapBtn.hidden = false;
   albumBtn.hidden = true;
-  destroy = runScene(world, current.adventure, { name: save.name, onWin });
+  destroy = runScene(world, current.adventure, { name: save.name, bag, onWin });
 }
 
 function onWin(adv) {

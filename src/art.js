@@ -177,7 +177,44 @@ const mud = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#F1E6
 const magnifier = `<svg viewBox="0 0 40 40"><circle cx="17" cy="17" r="11" fill="#DDEFF7" stroke="#2E3A2A" stroke-width="4"/><path d="M25 25 L36 36" stroke="#2E3A2A" stroke-width="6" stroke-linecap="round"/></svg>`;
 const question = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#E6E9DD"/><text x="20" y="28" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="24" fill="#9AA38E">?</text></svg>`;
 
+// ---------- Las i plecak ----------
+const backpack = `<svg viewBox="0 0 60 64">
+<path d="M18 14 C18 2 42 2 42 14" stroke="#7A4A22" stroke-width="5" fill="none"/>
+<rect x="8" y="12" width="44" height="48" rx="12" fill="#E2525C"/>
+<rect x="8" y="12" width="44" height="18" rx="10" fill="#C83F4A"/>
+<rect x="16" y="36" width="28" height="18" rx="6" fill="#F07A82"/>
+<rect x="27" y="26" width="6" height="8" rx="2" fill="#FFD25A"/>
+<path d="M8 24 h-2 a3 3 0 0 0 -3 3 v22 a3 3 0 0 0 3 3 h2 M52 24 h2 a3 3 0 0 1 3 3 v22 a3 3 0 0 1 -3 3 h-2" stroke="#C83F4A" stroke-width="3" fill="none"/>
+</svg>`;
+
+const nut = `<svg viewBox="0 0 40 40"><path d="M8 16 C8 8 32 8 32 16 C30 18 10 18 8 16 Z" fill="#8A5528"/><path d="M14 10 l2 -6 M20 9 l0 -6 M26 10 l-2 -6" stroke="#6E4220" stroke-width="2.5" stroke-linecap="round"/><path d="M10 17 C10 30 16 37 20 37 C24 37 30 30 30 17 Z" fill="#C98E55"/><path d="M15 22 q2 8 5 11" stroke="#E2B47C" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`;
+
+const squirrel = `<svg viewBox="0 0 100 110">
+<path d="M70 100 C100 96 104 60 90 40 C80 26 64 30 70 46 C76 60 92 66 76 86" fill="#E07A2E"/>
+<path d="M80 52 C88 60 90 72 82 84" stroke="#F0A04B" stroke-width="6" fill="none" stroke-linecap="round"/>
+<ellipse cx="46" cy="80" rx="22" ry="24" fill="#E07A2E"/>
+<ellipse cx="44" cy="84" rx="13" ry="16" fill="#F7D3A8"/>
+<path d="M30 30 L28 14 L40 24 Z M58 30 L62 14 L50 24 Z" fill="#E07A2E"/><path d="M29 18 l-2 -6 M61 18 l2 -6" stroke="#B85A1E" stroke-width="3" stroke-linecap="round"/>
+<circle cx="45" cy="42" r="19" fill="#E07A2E"/>
+<ellipse cx="50" cy="50" rx="10" ry="8" fill="#F7D3A8"/>
+<circle cx="38" cy="38" r="3.8" fill="#2E3A2A"/><circle cx="54" cy="38" r="3.8" fill="#2E3A2A"/><circle cx="39.2" cy="36.8" r="1.2" fill="#fff"/><circle cx="55.2" cy="36.8" r="1.2" fill="#fff"/>
+<circle cx="47" cy="47" r="2.6" fill="#2E3A2A"/>
+<path d="M30 76 q-6 -6 0 -12 M60 76 q6 -6 0 -12" stroke="#B85A1E" stroke-width="7" fill="none" stroke-linecap="round"/>
+<ellipse cx="36" cy="104" rx="8" ry="4" fill="#B85A1E"/><ellipse cx="56" cy="104" rx="8" ry="4" fill="#B85A1E"/>
+</svg>`;
+
+const pine = `<svg viewBox="0 0 100 170"><rect x="44" y="130" width="12" height="40" rx="4" fill="#7A5530"/><path d="M50 4 L82 54 L66 54 L90 94 L70 94 L96 136 L4 136 L30 94 L10 94 L34 54 L18 54 Z" fill="#2F7A3A"/><path d="M50 4 L66 54 L50 46 Z M50 54 L70 94 L50 86 Z M50 94 L76 136 L50 128 Z" fill="#3C9446"/></svg>`;
+
+const leafPile = `<svg viewBox="0 0 120 60"><ellipse cx="60" cy="54" rx="54" ry="6" fill="#0002"/><path d="M8 54 C10 30 40 18 60 20 C84 18 112 30 112 54 Z" fill="#D9803F"/><path d="M22 46 q10 -14 22 -4 M52 36 q10 -14 22 -2 M78 46 q12 -10 22 0" stroke="#B8642E" stroke-width="3" fill="none"/><ellipse cx="34" cy="30" rx="10" ry="5" fill="#E8A341" transform="rotate(-20 34 30)"/><ellipse cx="86" cy="32" rx="10" ry="5" fill="#C9502E" transform="rotate(25 86 32)"/><ellipse cx="60" cy="22" rx="9" ry="4" fill="#F0C048"/></svg>`;
+
+const log = `<svg viewBox="0 0 130 60"><ellipse cx="66" cy="56" rx="58" ry="5" fill="#0002"/><rect x="14" y="14" width="100" height="40" rx="20" fill="#9A6A3C"/><path d="M30 24 h50 M40 34 h60 M26 44 h40" stroke="#7A5530" stroke-width="3" stroke-linecap="round"/><ellipse cx="112" cy="34" rx="14" ry="20" fill="#C79A64"/><ellipse cx="112" cy="34" rx="8" ry="12" fill="#3A2614"/><path d="M40 14 q4 -10 10 -2 q4 -8 8 2" fill="#5DB048"/></svg>`;
+
+const mushrooms = `<svg viewBox="0 0 100 70"><ellipse cx="50" cy="66" rx="44" ry="4" fill="#0002"/><rect x="24" y="34" width="12" height="30" rx="5" fill="#FFFBF0"/><path d="M8 38 C8 14 52 14 52 38 Z" fill="#E2525C"/><circle cx="20" cy="28" r="4" fill="#FFFBF0"/><circle cx="34" cy="22" r="3.5" fill="#FFFBF0"/><circle cx="42" cy="32" r="3" fill="#FFFBF0"/><rect x="66" y="44" width="9" height="20" rx="4" fill="#FFFBF0"/><path d="M54 48 C54 30 88 30 88 48 Z" fill="#B8864E"/><circle cx="66" cy="40" r="2.5" fill="#E9D3B0"/></svg>`;
+
+const stone = `<svg viewBox="0 0 110 60"><ellipse cx="56" cy="56" rx="50" ry="5" fill="#0002"/><path d="M10 54 C6 30 30 10 56 12 C84 12 106 32 100 54 Z" fill="#A3AAA0"/><path d="M28 30 q14 -12 34 -8" stroke="#C3C9C0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M70 48 q10 -6 20 0" stroke="#8C9389" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M14 52 q4 -8 10 -2 q4 -8 8 2" fill="#5DB048"/></svg>`;
+
 export const ART = {
+  backpack, nut, squirrel, pine, leafPile, log, mushrooms, stone,
   yarn, bush, tree, cat, dog, pupFace, parcel, duckIcon,
   duck: duck(false), duckHat: duck(true), owl, frog, hedgehog, reeds, barn, lock, star,
   rabbit, chicken, pig, goat, fence: fence(), fenceFur: fence(furTuft), fenceMud: fence(mudSplat),

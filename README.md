@@ -35,6 +35,16 @@ Vercel wykrywa Vite automatycznie: zaimportuj repo w Vercel (Framework: Vite, bu
 2. **Paczka dla kaczki** (Staw) – sowa listonoszka prosi o dostarczenie paczki; adresata pokazuje obrazek na paczce.
 3. **Kto zjadł marchewki?** (Farma) – zagadka: ślady kopytek i druga wskazówka (biała sierść albo błoto) wskazują sprawcę, losowo kozę albo świnkę.
 
+4. **Orzechy na zimę** (Las) – zebranie trzech orzechów do plecaka i oddanie ich wiewiórce.
+
 Album przyjaciół (z mapy) zbiera zwierzątka z ukończonych przygód.
 
-Wkrótce: Las.
+## Plecak
+
+Trwały ekwipunek pieska (`save.bag`), wspólny dla wszystkich miejsc i zapisywany w przeglądarce. W przygodzie:
+
+- `api.bag.add('nut', 'log')` – przedmiot leci z miejsca na planszy do plecaka,
+- `api.bag.has(id, n)`, `api.bag.count(id)`, `api.bag.take(id, n)`,
+- `api.held` – przedmiot, który dziecko wyjęło z plecaka i piesek trzyma w pysku.
+
+Nowe przedmioty dopisuje się w `src/items.js`. Na plecaku opierają się przyszłe przygody wieloetapowe, w których coś znalezione w jednym miejscu rozwiązuje zagadkę w innym (do tego służy też `save.flags`).
