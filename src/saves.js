@@ -15,6 +15,9 @@ function normalize(s) {
     flags: s.flags && typeof s.flags === 'object' ? s.flags : {},
     region: s.region || 'dolina',
     resume: s.resume || null,
+    outfit: s.outfit && typeof s.outfit === 'object' ? s.outfit : null,
+    seenItems: Array.isArray(s.seenItems) ? s.seenItems : [],
+    reading: !!s.reading,
     created: s.created || Date.now(),
     updated: s.updated || Date.now(),
   };

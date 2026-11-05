@@ -12,7 +12,9 @@
     <div class="logo">Pies na Tropie</div>
     <div class="top-btns">
       <button class="btn ghost" id="menuBtn" type="button" hidden>Menu</button>
+      <button class="btn ghost" id="wardrobeBtn" type="button" hidden>Szafa</button>
       <button class="btn ghost" id="albumBtn" type="button" hidden>Album</button>
+      <button class="btn ghost" id="readBtn" type="button" aria-pressed="false" hidden>Czytanie: wyłączone</button>
       <button class="btn ghost" id="mapBtn" type="button" hidden>Mapa</button>
       <button class="btn ghost" id="soundBtn" type="button" aria-pressed="true">Głos: włączony</button>
     </div>
@@ -45,6 +47,20 @@
       <h1>Album przyjaciół</h1>
       <div class="cards" id="cards"></div>
       <button class="btn" id="albumClose" type="button">Na mapę</button>
+    </div>
+
+    <div class="overlay wardrobe" id="wardrobeScreen" hidden>
+      <div class="tasks-head">
+        <h1>Szafa pieska</h1>
+        <button class="btn" id="wardrobeClose" type="button">Gotowe!</button>
+      </div>
+      <div class="wr-body">
+        <div class="wr-preview"><div class="wr-face" id="wrFace"></div><div class="wr-side" id="wrSide"></div></div>
+        <div class="wr-pick">
+          <div class="wr-tabs" id="wrTabs"></div>
+          <div class="wr-items" id="wrItems"></div>
+        </div>
+      </div>
     </div>
 
     <div class="overlay tasks" id="taskScreen" hidden>

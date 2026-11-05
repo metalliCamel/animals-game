@@ -2,6 +2,7 @@
 // (mów, idź, nieś, potrząśnij, wygraj). Każda przygoda to osobny plik w src/adventures.
 import { ART } from './art.js';
 import { say, speaking } from './speech.js';
+import { isReading, words, wordsHtml, syllables } from './reading.js';
 import { ITEMS, itemPhrase } from './items.js';
 import { tone } from './sound.js';
 
@@ -139,7 +140,7 @@ export function runScene(root, adv, ctx) {
   // Piesek
   const dog = document.createElement('div');
   dog.className = 'ent dog';
-  dog.innerHTML = `<div class="flip"><div class="bob">${ART.dog}<div class="carry"></div></div></div>`;
+  dog.innerHTML = `<div class="flip"><div class="bob">${ctx.dogArt || ART.dog}<div class="carry"></div></div></div>`;
   place(dog, dogPos.x, dogPos.b, 15);
   scene.appendChild(dog);
   els.dog = dog;
@@ -287,7 +288,9 @@ export function runScene(root, adv, ctx) {
       const cx = ((r.left + r.width / 2) - sr.left) / sr.width * 100;
       const top = (r.top - sr.top) / sr.height * 100;
       bubble.innerHTML = (icon ? `<span class="ic">${ART[icon]}</span>` : '') + '<span class="t"></span>';
-      bubble.querySelector('.t').textContent = short;
+      if (reading) bubble.querySelector('.t').innerHTML = wordsHtml(short);
+      else bubble.querySelector('.t').textContent = short;
+      bubble.classList.toggle('readable', reading);
       bubble.style.left = Math.min(Math.max(cx, 18), 82) + '%';
       bubble.style.top = Math.max(top, 14) + '%';
       bubble.hidden = false;
@@ -299,8 +302,36 @@ export function runScene(root, adv, ctx) {
       clearTimeout(bubbleTimer);
       bubbleTimer = setTimeout(() => { if (bubble.dataset.token === token) bubble.hidden = true; }, 2600);
     };
-    say(full || short, { onStart: render, onEnd: hide });
+    // Czytanie z pieskiem: chwila na samodzielną próbę, potem słowa z dymka po kolei, potem całe zdanie
+    const reading = isReading() && /\p{L}/u.test(short) && words(short).length <= 6;
+    if (!reading) { say(full || short, { onStart: render, onEnd: hide }); return; }
+    const mark = (i) => {
+      bubble.querySelectorAll('.rw').forEach((w) => {
+        const n = +w.dataset.w;
+        w.classList.toggle('now', n === i);
+        w.classList.toggle('read', n < i);
+      });
+    };
+    const ws = words(short);
+    const pre = ws.map((w, i) => ({ text: w.word, rate: 0.7, gap: 180, onStart: () => mark(i) })).filter((x) => x.text);
+    pre.push({ text: '', rate: 0.9, onStart: () => mark(ws.length) });
+    say(full && full !== short ? full : short, {
+      onStart: render, onEnd: () => { mark(ws.length); hide(); }, pre, pause: 1400,
+    });
   }
+
+  // Kliknięte słowo w dymku: piesek czyta je powoli, sylaba po sylabie
+  bubble.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    const w = ev.target.closest('.rw');
+    if (!w || !isReading()) return;
+    const word = w.textContent.replace(/[^\p{L}-]/gu, '');
+    if (!word) return;
+    const syl = syllables(word);
+    w.classList.add('tap');
+    setTimeout(() => w.classList.remove('tap'), 900);
+    say(word, { interrupt: true, pre: syl.length > 1 ? syl.map((s) => ({ text: s, rate: 0.6, gap: 250 })) : [], pause: 0 });
+  });
 
   function sparkles(id, color) {
     const el = els[id];

@@ -88,7 +88,7 @@ export function runMap(root, ctx) {
   const here = places.find((p) => p.id === ctx.at) || back || places[0];
   const pup = document.createElement('div');
   pup.className = 'map-pup';
-  pup.innerHTML = ART.pupFace;
+  pup.innerHTML = ctx.pupArt || ART.pupFace;
   map.appendChild(pup);
   movePup(here, true);
 

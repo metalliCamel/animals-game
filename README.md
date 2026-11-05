@@ -95,3 +95,22 @@ Technicznie: `src/quests/islands.js` trzyma plansze ośmiu miejsc i składa jedn
 
 - **Co trzeba zrobić?** – pasek zadania u góry każdej sceny (z ikonką listy) i lista zadania na mapie są klikalne. Otwierają okienko z każdym potrzebnym przedmiotem i krokiem: obrazek, podpis, znaczek ✓ (mam), ✕ (odpada) albo szare tło (jeszcze nie), oraz miejsca, do których trzeba teraz iść. Kliknięcie nazwy zadania albo przedmiotu czyta je na głos. W Plaży i Wulkanie to samo okienko otwiera przycisk „Zadania” na mapie. Podpisy pochodzą z pola `label` w `checklist()` każdej przygody.
 - **Mowa w kolejce** (`src/speech.js`) – kwestie nie przerywają się nawzajem ani przy zmianie ekranu. Czekać mogą najwyżej dwie (starsze oczekujące są pomijane, bieżąca zawsze kończy się w całości). Dymek pokazuje się, gdy zaczyna się czytanie jego tekstu. Długie teksty są dzielone na zdania (obejście ucinania mowy w Chrome). Gdy syntezator nie ruszy w ciągu sekundy, gra tylko odmierza czas czytania.
+
+## Szafa pieska
+
+Przycisk „Szafa” na mapie. Sześć kolorów sierści jest dostępnych od razu, a ubranka odblokowują się za przygody (`src/wardrobe.js`, pole `unlock`):
+
+- **Na głowę:** kokardka (od razu), kapelusz kaczki (paczka), czapka detektywa (marchewki), wianek (urodziny kotka), kask górski (dzwonek), czapka kucharza (kanapki), kapelusz pirata (zamek z piasku).
+- **Okulary:** okrągłe (od razu), od słońca (latarnia), gwiazdki (koncert).
+- **Na szyję:** czerwona obroża (od razu), niebieska chustka (kłębek), szalik (orzechy), muszka (urodziny), medal (mostek).
+- **Na plecy:** ognista peleryna (tęczowy wybuch), skrzydełka papużki (jajko).
+
+Strój zapisuje się w zapisie gry. Piesek nosi go w scenach (widok z boku), na mapie, na kartach zapisów i na ekranie startowym (widok od przodu). Ekran gwiazdki mówi o nowym ubranku, a nowości w szafie mają znaczek „Nowe!”.
+
+## Czytanie z pieskiem
+
+Przełącznik „Czytanie” w górnym pasku, zapisywany osobno dla każdego zapisu (`src/reading.js`). Gdy jest włączony:
+
+- słowa w dymkach są dzielone na sylaby, na zmianę w dwóch kolorach (prosta reguła dla polskiego: zmiękczenia „i”, dwuznaki, grupy typu „kr”),
+- po pojawieniu się dymka jest chwila na samodzielne przeczytanie, potem piesek czyta słowa po kolei, wolniej i z podświetleniem, a na końcu całe zdanie,
+- kliknięte słowo w dymku piesek czyta powoli, sylaba po sylabie.

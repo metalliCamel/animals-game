@@ -8,6 +8,8 @@ import { ADVENTURES, FRIENDS } from './adventures/index.js';
 import { REGIONS, ALL_PLACES, QUESTS, OPEN_QUESTS, placeRegion } from './world.js';
 import { composeScene, ISLAND_PLACE_IDS } from './quests/islands.js';
 import { idleScene } from './quests/mountains.js';
+import { setReading } from './reading.js';
+import { DEFAULT_OUTFIT, FURS, ITEMS, SLOTS, isUnlocked, unlockedBy, dogSvg, pupSvg } from './wardrobe.js';
 
 const $ = (s) => document.querySelector(s);
 const world = $('#world');
@@ -42,11 +44,25 @@ const taskScreen = $('#taskScreen');
 let inScene = false; // czy gramy w scenie (a nie na mapie)
 
 function hideOverlays() {
-  for (const el of [startScreen, nameScreen, endScreen, albumScreen, taskScreen]) el.hidden = true;
+  for (const el of [startScreen, nameScreen, endScreen, albumScreen, taskScreen, $('#wardrobeScreen')]) el.hidden = true;
 }
+const wardrobeBtn = $('#wardrobeBtn');
+const readBtn = $('#readBtn');
+const outfit = () => ({ ...DEFAULT_OUTFIT, ...(save?.outfit || {}) });
+// Nowe ubranka, których Hania jeszcze nie widziała w szafie
+const unseenItems = () => ITEMS.filter((i) => i.unlock && isUnlocked(i, save.done) && !save.seenItems.includes(i.id));
+
 function setTopBar(mode) {
   mapBtn.hidden = mode !== 'scene';
   albumBtn.hidden = mode !== 'map';
+  wardrobeBtn.hidden = mode !== 'map';
+  readBtn.hidden = mode === 'start' || mode === 'name';
+  if (save) {
+    wardrobeBtn.classList.toggle('pulse', mode === 'map' && unseenItems().length > 0);
+    readBtn.textContent = 'Czytanie: ' + (save.reading ? 'włączone' : 'wyłączone');
+    readBtn.setAttribute('aria-pressed', String(!!save.reading));
+    setReading(!!save.reading);
+  }
   menuBtn.hidden = mode === 'start' || mode === 'name';
   renameBtn.hidden = mode !== 'map';
   mapBtn.classList.remove('pulse');
@@ -109,6 +125,7 @@ function showMap(extra = {}) {
     save, region, at: current?.place.id, quest: questInfo(region.id), gateCalls,
     board: region.open ? questBoard() : null,
     onTasks: openTasks,
+    pupArt: pupSvg(outfit()),
     onPick: startPlace, onTravel: travel, ...extra,
   });
   inScene = false;
@@ -133,6 +150,7 @@ function startPlace(place) {
   inScene = true;
   const common = {
     onTasks: openTasks,
+    dogArt: dogSvg(outfit()),
     name: save.name, bag, onWin, saveState: writeSave, pulseMap: () => mapBtn.classList.add('pulse'),
     world: { done: save.done, flags: save.flags },
   };
@@ -183,20 +201,100 @@ function onWin(adv) {
 
   $('#sticker').innerHTML = `${ART.star}<span class="sticker-pic">${ART[adv.sticker]}</span>`;
   $('#endTitle').textContent = `Brawo, ${save.name}!`;
-  $('#endText').textContent = adv.winText;
+  // Nowe ubranko w szafie za tę przygodę
+  const gifts = first ? unlockedBy(adv.id) : [];
+  $('#endText').textContent = adv.winText + (gifts.length ? ` W szafie czeka nowe ubranko: ${gifts.map((g) => g.label.toLowerCase()).join(' i ')}!` : '');
   // Przygód wieloetapowych nie powtarza się od razu, więc tylko „Na mapę”
   $('#againBtn').hidden = [...QUESTS, ...OPEN_QUESTS].some((q) => q.id === adv.id);
   endScreen.hidden = false;
-  say(`Brawo! ${adv.winText}`);
+  say(`Brawo! ${$('#endText').textContent}`);
 }
 
 $('#toMapBtn').addEventListener('click', () => showMap({ unlocked: current?.unlocked, questNew: current?.questNew }));
 $('#againBtn').addEventListener('click', () => { endScreen.hidden = true; startPlace(current.place); });
 mapBtn.addEventListener('click', () => showMap());
+readBtn.addEventListener('click', () => {
+  if (!save) return;
+  save.reading = !save.reading;
+  writeSave();
+  setReading(save.reading);
+  readBtn.textContent = 'Czytanie: ' + (save.reading ? 'włączone' : 'wyłączone');
+  readBtn.setAttribute('aria-pressed', String(save.reading));
+  say(save.reading ? 'Czytamy razem! Najpierw spróbuj przeczytać sama, potem przeczytam ja. Kliknij słowo w dymku, a przeczytam je po sylabach.' : 'Czytanie wyłączone.', { interrupt: true });
+});
 $('#soundBtn').addEventListener('click', (e) => {
   setSound(!soundOn());
   e.currentTarget.textContent = 'Głos: ' + (soundOn() ? 'włączony' : 'wyłączony');
   e.currentTarget.setAttribute('aria-pressed', String(soundOn()));
+});
+
+// ---------- Szafa pieska ----------
+const wardrobeScreen = $('#wardrobeScreen');
+let wrSlot = 'fur';
+const ADV_TITLE = (id) => ADVENTURES[id]?.title || [...QUESTS, ...OPEN_QUESTS].find((q) => q.id === id)?.title || id;
+
+function renderWardrobe() {
+  const o = outfit();
+  $('#wrFace').innerHTML = pupSvg(o);
+  $('#wrSide').innerHTML = dogSvg(o);
+  $('#wrTabs').innerHTML = SLOTS.map((s) => {
+    const fresh = s.id !== 'fur' && unseenItems().some((i) => i.slot === s.id);
+    return `<button type="button" class="wr-tab${s.id === wrSlot ? ' on' : ''}${fresh ? ' fresh' : ''}" data-slot="${s.id}">${s.label}</button>`;
+  }).join('');
+  let cards;
+  if (wrSlot === 'fur') {
+    cards = FURS.map((f) => `<button type="button" class="wr-item${o.fur === f.id ? ' on' : ''}" data-fur="${f.id}"><span class="wr-pic">${pupSvg({ ...DEFAULT_OUTFIT, fur: f.id, neck: null })}</span><span class="wr-label">${f.label}</span></button>`);
+  } else {
+    const items = ITEMS.filter((i) => i.slot === wrSlot);
+    cards = [`<button type="button" class="wr-item${!o[wrSlot] ? ' on' : ''}" data-none="1"><span class="wr-pic wr-none">✕</span><span class="wr-label">Nic</span></button>`,
+      ...items.map((i) => {
+        const open = isUnlocked(i, save.done);
+        const fresh = open && i.unlock && !save.seenItems.includes(i.id);
+        const pic = pupSvg({ ...DEFAULT_OUTFIT, fur: o.fur, neck: null, [i.slot]: i.id });
+        return `<button type="button" class="wr-item${o[wrSlot] === i.id ? ' on' : ''}${open ? '' : ' locked'}" data-item="${i.id}"><span class="wr-pic">${pic}${open ? '' : `<span class="wr-lock">${ART.lock}</span>`}${fresh ? '<span class="wr-new">Nowe!</span>' : ''}</span><span class="wr-label">${i.label}</span></button>`;
+      })];
+  }
+  $('#wrItems').innerHTML = cards.join('');
+  // Obejrzane nowe ubranka w tej zakładce przestają być „nowe”
+  if (wrSlot !== 'fur') {
+    const seen = ITEMS.filter((i) => i.slot === wrSlot && i.unlock && isUnlocked(i, save.done)).map((i) => i.id);
+    const add = seen.filter((id) => !save.seenItems.includes(id));
+    if (add.length) { save.seenItems.push(...add); writeSave(); }
+  }
+}
+function wear(changes, text) {
+  save.outfit = { ...outfit(), ...changes };
+  writeSave();
+  renderWardrobe();
+  say(text, { interrupt: true });
+}
+$('#wrTabs').addEventListener('click', (e) => {
+  const b = e.target.closest('.wr-tab');
+  if (!b) return;
+  wrSlot = b.dataset.slot;
+  renderWardrobe();
+  say(SLOTS.find((s) => s.id === wrSlot).label, { interrupt: true });
+});
+$('#wrItems').addEventListener('click', (e) => {
+  const b = e.target.closest('.wr-item');
+  if (!b) return;
+  if (b.dataset.fur) { const f = FURS.find((x) => x.id === b.dataset.fur); wear({ fur: f.id }, `${f.label} piesek!`); return; }
+  if (b.dataset.none) { wear({ [wrSlot]: null }, 'Bez niczego.'); return; }
+  const i = ITEMS.find((x) => x.id === b.dataset.item);
+  if (!isUnlocked(i, save.done)) { say(`${i.label}. To ubranko dostaniesz za przygodę: ${ADV_TITLE(i.unlock)}.`, { interrupt: true }); return; }
+  wear({ [i.slot]: outfit()[i.slot] === i.id ? null : i.id }, outfit()[i.slot] === i.id ? 'Zdjęte!' : `${i.label}! Pięknie!`);
+});
+function openWardrobe() {
+  wrSlot = unseenItems()[0]?.slot || 'fur';
+  renderWardrobe();
+  wardrobeScreen.hidden = false;
+  say(`Szafa pieska! Wybierz, w co ubrać ${save.name}.`, { interrupt: true });
+}
+wardrobeBtn.addEventListener('click', openWardrobe);
+$('#wardrobeClose').addEventListener('click', () => {
+  wardrobeScreen.hidden = true;
+  say(`Hau! Ale ładnie wyglądam!`);
+  showMap(); // piesek na mapie od razu w nowym stroju
 });
 
 // ---------- Okienko „Co trzeba zrobić?” ----------
@@ -277,7 +375,7 @@ function showStart() {
   const last = all.last !== null ? all.slots[all.last] : null;
   const any = all.slots.some(Boolean);
   startBody.innerHTML = `
-    <div class="start-hero">${ART.pupFace}</div>
+    <div class="start-hero">${pupSvg(last?.outfit || DEFAULT_OUTFIT)}</div>
     <h1 class="start-title">Pies na Tropie</h1>
     <div class="start-btns">
       ${last ? `<button class="btn big" type="button" data-act="continue">Graj dalej<span class="who">${last.name}</span></button>` : ''}
@@ -324,7 +422,7 @@ function showSlots(mode) {
         card.querySelector('[data-c="no"]').addEventListener('click', () => render(false));
         return;
       }
-      card.innerHTML = `<button class="slot-main" type="button"><span class="slot-pic">${ART.pupFace}</span><span class="slot-name">${s.name}</span><span class="slot-meta"><span class="slot-stars">${ART.star}<b>${stars(s)}</b></span> · ${whenText(s.updated)}</span></button>${mode === 'load' ? '<button class="slot-del" type="button" aria-label="Usuń zapis">Usuń</button>' : ''}`;
+      card.innerHTML = `<button class="slot-main" type="button"><span class="slot-pic">${pupSvg(s.outfit || DEFAULT_OUTFIT)}</span><span class="slot-name">${s.name}</span><span class="slot-meta"><span class="slot-stars">${ART.star}<b>${stars(s)}</b></span> · ${whenText(s.updated)}</span></button>${mode === 'load' ? '<button class="slot-del" type="button" aria-label="Usuń zapis">Usuń</button>' : ''}`;
       card.querySelector('.slot-main').addEventListener('click', () => {
         if (mode === 'overwrite') { render(true); return; }
         say(`Hau! Wracamy, ${s.name}!`);
@@ -352,7 +450,7 @@ function loadSlot(i) {
 menuBtn.addEventListener('click', () => { writeSave(); showStart(); });
 
 // ---------- Imię pieska ----------
-$('#namePup').innerHTML = ART.pupFace;
+$('#namePup').innerHTML = pupSvg(DEFAULT_OUTFIT);
 function askName(newSlot) {
   clear();
   hideOverlays();
