@@ -465,6 +465,8 @@ function askName(newSlot) {
   hideOverlays();
   setTopBar('name');
   pendingSlot = Number.isInteger(newSlot) ? newSlot : null;
+  // Nowa gra: po imieniu jest jeszcze krok wyglądu, więc „Dalej”; zmiana imienia w trakcie gry kończy się od razu
+  $('#startBtn').textContent = pendingSlot !== null ? 'Dalej' : 'Gotowe!';
   nameScreen.hidden = false;
   nameInput.value = pendingSlot === null && save ? save.name : '';
   setTimeout(() => { try { nameInput.focus({ preventScroll: true }); } catch (e) { /* ok */ } }, 200);
