@@ -379,6 +379,23 @@ body {
 .wr-label { font-size: 13px; font-weight: 700; text-align: center; line-height: 1.2; }
 @media (max-width: 640px) { .wr-body { grid-template-columns: minmax(0, 1fr); } }
 
+/* Mapa świata */
+.world-map { background: linear-gradient(115deg, #9BD06A 0%, #8CC45E 48%, #E8C98A 56%, #7FC7E8 64%, #5FB2DA 100%); }
+.wm-land { position: absolute; left: 4%; top: 46%; width: 40%; height: 46%; border-radius: 50%; background: #A6D676; opacity: .7; }
+.wm-peaks { position: absolute; left: 14%; top: 14%; width: 40%; height: 28%; background:
+  linear-gradient(135deg, transparent 49.5%, #A9B4BC 50%) 0 100% / 40% 100% no-repeat,
+  linear-gradient(225deg, transparent 49.5%, #A9B4BC 50%) 40% 100% / 40% 100% no-repeat,
+  linear-gradient(135deg, transparent 49.5%, #949FA8 50%) 45% 100% / 28% 80% no-repeat,
+  linear-gradient(225deg, transparent 49.5%, #949FA8 50%) 73% 100% / 28% 80% no-repeat; opacity: .8; }
+.wm-island { position: absolute; left: 73%; top: 18%; width: 22%; height: 38%; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #7FC75A 0 55%, #E8C98A 56% 70%, transparent 71%); }
+.wm-sea { position: absolute; inset: 0; background: repeating-linear-gradient(170deg, transparent 0 40px, #ffffff22 40px 43px); }
+.wm-region { width: 15%; }
+.wm-region.here .disc { box-shadow: 0 0 0 6px var(--leaf), 0 6px 0 #0002; }
+.wm-stars { display: inline-flex; align-items: center; gap: 4px; background: var(--paper); border-radius: 999px; padding: 2px 10px 2px 6px; font-family: var(--display); font-weight: 800; font-size: clamp(14px, 1.8vw, 20px); color: var(--ink); font-variant-numeric: tabular-nums; box-shadow: 0 3px 0 #0002; }
+.wm-stars.full { background: #FFF3CC; box-shadow: 0 0 0 3px var(--sun); }
+.wm-star { width: 1.2em; display: block; }
+.wm-star svg { width: 100%; height: auto; display: block; }
+
 /* Album */
 .album { justify-content: flex-start; gap: 16px; overflow-y: auto; }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 118px)); justify-content: center; gap: 12px; width: min(100%, 1000px); }

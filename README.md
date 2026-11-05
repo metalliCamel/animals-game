@@ -114,3 +114,7 @@ Przełącznik „Czytanie” w górnym pasku, zapisywany osobno dla każdego zap
 - słowa w dymkach są dzielone na sylaby, na zmianę w dwóch kolorach (prosta reguła dla polskiego: zmiękczenia „i”, dwuznaki, grupy typu „kr”),
 - po pojawieniu się dymka jest chwila na samodzielne przeczytanie, potem piesek czyta słowa po kolei, wolniej i z podświetleniem, a na końcu całe zdanie,
 - kliknięte słowo w dymku piesek czyta powoli, sylaba po sylabie.
+
+## Mapa świata
+
+Przycisk „Świat” na mapie każdej krainy otwiera mapę świata (`src/worldmap.js`) z czterema krainami: Doliną, Górami, Plażą i Wulkanem. Przy każdej krainie widać liczbę zdobytych gwiazdek (np. 3/5), kłódkę z wyjaśnieniem, co ją otworzy, balonik, gdy ktoś tam czeka na pomoc, oraz pieska w krainie, w której teraz jest. Kliknięcie otwartej krainy przenosi od razu na jej mapę, a „Wróć” wraca do bieżącej. Drogowskazy na mapach krain działają jak dotąd.

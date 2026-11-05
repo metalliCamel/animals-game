@@ -154,7 +154,7 @@ export function runMap(root, ctx) {
     later(400, () => say(`Hura! Nowe miejsce na mapie: ${p.label}! Kliknij, żeby tam pójść.`));
   } else if (calling) {
     later(300, () => say(`${hi}Ktoś cię woła! Kliknij drogowskaz: ${calling.gate.label}.`));
-  } else if (ctx.greet || ctx.fromGate) {
+  } else if (ctx.greet || ctx.fromGate || ctx.fromWorld) {
     later(300, () => say(`${hi}${region.title}! Dokąd idziemy? Kliknij miejsce na mapie.`));
   }
 

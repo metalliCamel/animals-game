@@ -3,7 +3,8 @@ import { ART } from './art.js';
 import { say, setSound, soundOn, stopSpeech } from './speech.js';
 import { loadAll, newSave, storeSlot, deleteSlot, whenText } from './saves.js';
 import { runScene } from './scene.js';
-import { runMap } from './map.js';
+import { runMap, placeState } from './map.js';
+import { runWorld } from './worldmap.js';
 import { ADVENTURES, FRIENDS } from './adventures/index.js';
 import { REGIONS, ALL_PLACES, QUESTS, OPEN_QUESTS, placeRegion } from './world.js';
 import { composeScene, ISLAND_PLACE_IDS } from './quests/islands.js';
@@ -52,8 +53,11 @@ const outfit = () => ({ ...DEFAULT_OUTFIT, ...(save?.outfit || {}) });
 // Nowe ubranka, których Hania jeszcze nie widziała w szafie
 const unseenItems = () => ITEMS.filter((i) => i.unlock && isUnlocked(i, save.done) && !save.seenItems.includes(i.id));
 
+const worldBtn = $('#worldBtn');
 function setTopBar(mode) {
-  mapBtn.hidden = mode !== 'scene';
+  worldBtn.hidden = mode !== 'map';
+  mapBtn.hidden = mode !== 'scene' && mode !== 'world';
+  mapBtn.textContent = mode === 'world' ? 'Wróć' : 'Mapa';
   albumBtn.hidden = mode !== 'map';
   wardrobeBtn.hidden = mode !== 'map';
   readBtn.hidden = mode === 'start' || mode === 'name';
@@ -132,6 +136,41 @@ function showMap(extra = {}) {
   const finishedQ = openActive().find((q) => questState(q).finished);
   if (finishedQ) { current = current || { place: region.places[0] }; onWin(finishedQ); }
 }
+
+// ---------- Mapa świata ----------
+const REGION_DONE = {
+  dolina: ['yarn', 'parcel', 'carrots', 'nuts', 'party'],
+  gory: ['bell', 'sandwich', 'bridge', 'concert'],
+  plaza: ['castle', 'lighthouse'],
+  wulkan: ['rainbow', 'egg'],
+};
+const REGION_AFTER = { dolina: null, gory: 'party', plaza: 'concert', wulkan: 'concert' };
+function regionStatus(id) {
+  const open = !REGION_AFTER[id] || save.done.includes(REGION_AFTER[id]);
+  const ids = REGION_DONE[id];
+  const done = ids.filter((x) => save.done.includes(x)).length;
+  let todo = false;
+  if (open) {
+    const region = REGIONS[id];
+    const q = questInfo(id);
+    if (q) todo = !q.started || region.places.some((p) => q.todo(p.id));
+    // Zwykłe przygody w Dolinie: otwarte, a jeszcze nieukończone
+    if (!todo) todo = region.places.some((p) => p.adventure && placeState(p, save) === 'open');
+  }
+  return { open, done, total: ids.length, todo };
+}
+let inWorld = false;
+function showWorld() {
+  clear();
+  hideOverlays();
+  setTopBar('world');
+  inWorld = true;
+  destroy = runWorld(world, {
+    status: regionStatus, here: save.region, pupArt: pupSvg(outfit()),
+    onGo: (id) => { inWorld = false; const from = save.region; save.region = id; current = null; showMap(id === from ? {} : { fromWorld: true }); },
+  });
+}
+worldBtn.addEventListener('click', showWorld);
 
 function travel(regionId) {
   const from = save.region;
@@ -212,7 +251,7 @@ function onWin(adv) {
 
 $('#toMapBtn').addEventListener('click', () => showMap({ unlocked: current?.unlocked, questNew: current?.questNew }));
 $('#againBtn').addEventListener('click', () => { endScreen.hidden = true; startPlace(current.place); });
-mapBtn.addEventListener('click', () => showMap());
+mapBtn.addEventListener('click', () => { inWorld = false; showMap(); });
 readBtn.addEventListener('click', () => {
   if (!save) return;
   save.reading = !save.reading;
