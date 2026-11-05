@@ -38,8 +38,11 @@ let destroy = null;
 let current = null; // { place, adventure, unlocked, questNew }
 function clear() { if (destroy) destroy(); destroy = null; }
 
+const taskScreen = $('#taskScreen');
+let inScene = false; // czy gramy w scenie (a nie na mapie)
+
 function hideOverlays() {
-  for (const el of [startScreen, nameScreen, endScreen, albumScreen]) el.hidden = true;
+  for (const el of [startScreen, nameScreen, endScreen, albumScreen, taskScreen]) el.hidden = true;
 }
 function setTopBar(mode) {
   mapBtn.hidden = mode !== 'scene';
@@ -105,8 +108,10 @@ function showMap(extra = {}) {
   destroy = runMap(world, {
     save, region, at: current?.place.id, quest: questInfo(region.id), gateCalls,
     board: region.open ? questBoard() : null,
+    onTasks: openTasks,
     onPick: startPlace, onTravel: travel, ...extra,
   });
+  inScene = false;
   const finishedQ = openActive().find((q) => questState(q).finished);
   if (finishedQ) { current = current || { place: region.places[0] }; onWin(finishedQ); }
 }
@@ -125,7 +130,9 @@ function startPlace(place) {
   save.region = placeRegion(place.id);
   save.resume = { place: place.id };
   writeSave();
+  inScene = true;
   const common = {
+    onTasks: openTasks,
     name: save.name, bag, onWin, saveState: writeSave, pulseMap: () => mapBtn.classList.add('pulse'),
     world: { done: save.done, flags: save.flags },
   };
@@ -191,6 +198,68 @@ $('#soundBtn').addEventListener('click', (e) => {
   e.currentTarget.textContent = 'Głos: ' + (soundOn() ? 'włączony' : 'wyłączony');
   e.currentTarget.setAttribute('aria-pressed', String(soundOn()));
 });
+
+// ---------- Okienko „Co trzeba zrobić?” ----------
+// Lista przedmiotów i kroków aktualnych przygód, z miejscami, do których trzeba iść.
+function questRow(q, regionIds) {
+  const st = questState(q);
+  const done = save.done.includes(q.id);
+  const places = regionIds.flatMap((r) => REGIONS[r].places);
+  return {
+    title: q.title, icon: q.icon, done, started: !!st.started, items: q.checklist(st),
+    where: done ? [] : places.filter((pl) => q.todo(pl.id, st, bagCount)).map((pl) => ({ label: pl.label, icon: pl.icon })),
+  };
+}
+function taskRows() {
+  const region = REGIONS[save.region] || REGIONS.dolina;
+  // Zwykła przygoda w scenie (np. kłębek, orzechy)
+  const adv = inScene && current && ADVENTURES[current.adventure?.id];
+  if (adv && adv.checklist && current.adventure === adv) {
+    const st = save.flags.adv?.[adv.id] || {};
+    return [{ title: adv.title, icon: adv.sticker, done: false, started: true, items: adv.checklist(st, bagCount), hint: adv.where(st, bagCount), where: [] }];
+  }
+  if (region.open) return OPEN_QUESTS.filter((q) => openUnlocked()).map((q) => questRow(q, ['plaza', 'wulkan']));
+  const q = QUESTS.find((x) => x.region === region.id && questActive(x));
+  return q ? [questRow(q, [region.id])] : [];
+}
+const ITEM_STATE = (c) => (c.out ? 'out' : c.ok ? 'ok' : 'todo');
+function rowSpeech(r) {
+  if (r.done) return `${r.title}. Zrobione! Brawo!`;
+  const have = r.items.filter((c) => c.ok).map((c) => c.label);
+  const need = r.items.filter((c) => !c.ok && !c.out).map((c) => c.label);
+  const where = r.hint || (r.where.length ? `Idź tutaj: ${r.where.map((w) => w.label).join(', ')}.` : '');
+  return `${r.title}. ${have.length ? `Masz już: ${have.join(', ')}. ` : ''}${need.length ? `Jeszcze trzeba: ${need.join(', ')}. ` : ''}${where}`;
+}
+function openTasks() {
+  const rows = taskRows();
+  const box = $('#taskRows');
+  if (!rows.length) {
+    box.innerHTML = '<p class="task-empty">Tutaj teraz nie ma zadań. Rozejrzyj się i porozmawiaj ze zwierzątkami!</p>';
+  } else {
+    box.innerHTML = rows.map((r, i) => `
+      <div class="task-row${r.done ? ' done' : ''}">
+        <button type="button" class="task-title" data-row="${i}"><span class="task-ic">${ART[r.icon]}</span><span>${r.title}</span>${r.done ? `<span class="task-star">${ART.star}</span>` : ''}</button>
+        <div class="task-items">${r.items.map((c, j) => `
+          <button type="button" class="task-item ${ITEM_STATE(c)}" data-row="${i}" data-item="${j}">
+            <span class="ti-pic">${ART[c.art]}<span class="ti-mark">${c.out ? '✕' : c.ok ? '✓' : ''}</span></span>
+            <span class="ti-label">${c.label || ''}</span>
+          </button>`).join('')}</div>
+        ${!r.done && (r.where.length || r.hint) ? `<div class="task-where"><span class="tw-label">Gdzie iść?</span>${r.hint ? `<span class="tw-hint">${r.hint}</span>` : ''}${r.where.map((w) => `<span class="tw-place"><span class="tw-ic">${ART[w.icon]}</span>${w.label}</span>`).join('')}</div>` : ''}
+      </div>`).join('');
+  }
+  box.querySelectorAll('.task-title').forEach((b) => b.addEventListener('click', () => say(rowSpeech(rows[+b.dataset.row]), { interrupt: true })));
+  box.querySelectorAll('.task-item').forEach((b) => b.addEventListener('click', () => {
+    const c = rows[+b.dataset.row].items[+b.dataset.item];
+    say(`${c.label}. ${c.out ? 'To odpada.' : c.ok ? 'Masz to!' : 'Jeszcze nie.'}`, { interrupt: true });
+  }));
+  taskScreen.hidden = false;
+  const active = rows.filter((r) => !r.done);
+  say(!rows.length ? 'Tutaj teraz nie ma zadań.'
+    : active.length === 1 ? rowSpeech(active[0])
+      : active.length ? `Masz ${active.length === 2 ? 'dwa' : active.length === 3 ? 'trzy' : 'cztery'} zadania. Kliknij nazwę zadania, a powiem ci więcej.`
+        : 'Wszystkie zadania zrobione! Brawo!', { interrupt: true });
+}
+$('#taskClose').addEventListener('click', () => { taskScreen.hidden = true; });
 
 // ---------- Ekran startowy ----------
 const startBody = $('#startBody');

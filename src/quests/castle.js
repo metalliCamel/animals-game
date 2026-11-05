@@ -43,10 +43,13 @@ const excluded = (st, who) => st.facts.some((f) => EXCLUDES[f] === who);
 
 function checklist(st) {
   return [
-    { art: st.facts[0] ? FACT[st.facts[0]].art : 'magnifier', ok: !!st.facts[0] },
-    { art: st.facts[1] ? FACT[st.facts[1]].art : 'magnifier', ok: !!st.facts[1] },
-    ...Object.keys(SUSPECTS).map((s) => ({ art: s, ok: st.confessed && st.culprit === s, out: excluded(st, s) })),
-    { art: 'castleIcon', ok: !!st.finished },
+    { art: st.facts[0] ? FACT[st.facts[0]].art : 'magnifier', ok: !!st.facts[0], label: st.facts[0] ? `wskazówka: ${FACT[st.facts[0]].short.toLowerCase().replace('!', '')}` : 'pierwsza wskazówka' },
+    { art: st.facts[1] ? FACT[st.facts[1]].art : 'magnifier', ok: !!st.facts[1], label: st.facts[1] ? `wskazówka: ${FACT[st.facts[1]].short.toLowerCase().replace('!', '')}` : 'druga wskazówka' },
+    ...Object.keys(SUSPECTS).map((s) => ({
+      art: s, ok: st.confessed && st.culprit === s, out: excluded(st, s),
+      label: excluded(st, s) ? `${SUSPECTS[s].name}: to nie ${s === 'penguin' ? 'on' : 'ona'}` : st.confessed && st.culprit === s ? `${SUSPECTS[s].name}: to ${s === 'penguin' ? 'był on' : 'była ona'}` : `${SUSPECTS[s].name}?`,
+    })),
+    { art: 'castleIcon', ok: !!st.finished, label: 'nowy zamek z piasku' },
   ];
 }
 

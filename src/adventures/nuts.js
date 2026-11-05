@@ -24,6 +24,8 @@ export default {
     { id: 'stone', art: 'stone', x: 32, b: 6, w: 14, label: 'Kamień' },
     { id: 'pine4', art: 'pine', x: 94, b: 8, w: 9, deco: true },
   ],
+  checklist: (st, bagCount) => Array.from({ length: NEED }, (_, i) => ({ art: 'nut', ok: i < bagCount('nut'), label: `orzech ${i + 1}` })),
+  where: (st, bagCount) => (bagCount('nut') >= NEED ? 'Wyjmij orzechy z plecaka i daj je wiewiórce.' : 'Szukaj pod liśćmi, w pniu, przy grzybkach i pod kamieniem.'),
   start(api) {
     const n = api.name;
     const spots = ['leaves', 'log', 'mush', 'stone'];

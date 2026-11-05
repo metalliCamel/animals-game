@@ -14,6 +14,11 @@ export default {
     { id: 'b2', art: 'bush', x: 66, b: 34, w: 16, label: 'Krzak' },
     { id: 'cat', art: 'cat', x: 86, b: 22, w: 11, label: 'Kotek' },
   ],
+  checklist: (st) => [
+    { art: 'yarn', ok: !!st.found, label: 'kłębek w krzaczkach' },
+    { art: 'cat', ok: false, label: 'oddaj kłębek kotkowi' },
+  ],
+  where: (st) => (st.found ? 'Zanieś kłębek kotkowi.' : 'Szukaj w krzaczkach.'),
   start(api) {
     const n = api.name;
     // Stan jest zapisywany, więc po powrocie wszystko jest tam, gdzie było

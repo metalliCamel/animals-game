@@ -17,10 +17,10 @@ const allIn = (st) => st.inv.sheep === true && st.inv.chamois === true && st.inv
 
 function checklist(st) {
   return [
-    { art: 'bell', ok: st.inv.sheep === true },
-    { art: 'drum', ok: st.inv.chamois === true },
-    { art: 'whistle', ok: st.inv.marmot === true },
-    { art: 'note', ok: !!st.finished },
+    { art: 'bell', ok: st.inv.sheep === true, label: 'owieczka z dzwonkiem' },
+    { art: 'drum', ok: st.inv.chamois === true, label: 'kozica z bębenkiem' },
+    { art: 'whistle', ok: st.inv.marmot === true, label: st.inv.marmot === 'lost' ? 'gwizdek świstaka (zgubiony w jaskini)' : 'świstak z gwizdkiem' },
+    { art: 'note', ok: !!st.finished, label: 'koncert na szczycie' },
   ];
 }
 

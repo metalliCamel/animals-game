@@ -16,10 +16,10 @@ function initState(st) { if (!st.cleared) st.cleared = []; return st; }
 function checklist(st) {
   const c = st.culprit && SUSPECTS[st.culprit];
   return [
-    { art: 'crumbs', ok: !!st.crumbs },
-    { art: st.clue && c ? c.clue : 'magnifier', ok: !!st.clue },
-    { art: st.confessed && c ? st.culprit : 'question', ok: !!st.confessed },
-    { art: 'basket', ok: !!st.finished },
+    { art: 'crumbs', ok: !!st.crumbs, label: 'okruszki przy stoliku' },
+    { art: st.clue && c ? c.clue : 'magnifier', ok: !!st.clue, label: st.clue && c ? `wskazówka: ${c.has}` : 'wskazówka nad jeziorem' },
+    { art: st.confessed && c ? st.culprit : 'question', ok: !!st.confessed, label: st.confessed && c ? `to ${c.name === 'sroka' ? 'była' : 'był'} ${c.name}` : 'kto to zrobił?' },
+    { art: 'basket', ok: !!st.finished, label: 'koszyk kanapek dla świstaka' },
   ];
 }
 

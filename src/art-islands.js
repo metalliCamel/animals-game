@@ -199,7 +199,10 @@ const rainbow = `<svg viewBox="0 0 200 100">${['#F06A5A', '#F7A24A', '#FFD84A', 
 const volcanoIcon = `<svg viewBox="0 0 44 40"><path d="M2 38 L16 12 H28 L42 38 Z" fill="#6B5B52"/><path d="M16 12 H28 L26 16 C24 14 20 14 18 16 Z" fill="#F7A24A"/><path d="M22 10 C18 4 14 4 12 6 M22 10 C26 4 30 4 32 6" stroke="#F06A5A" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`;
 const lighthouseIcon = `<svg viewBox="0 0 40 44"><path d="M12 42 L15 14 H25 L28 42 Z" fill="#FFFBF0" stroke="#3A444E" stroke-width="1.5"/><path d="M13 30 H27 L27.5 36 H12.5 Z" fill="#E2525C"/><rect x="14" y="6" width="12" height="8" rx="2" fill="#FFE79A" stroke="#3A444E" stroke-width="2"/><path d="M26 10 L40 4 V16 Z" fill="#FFE79A" opacity=".7"/></svg>`;
 
+const listIcon = `<svg viewBox="0 0 40 44"><rect x="5" y="6" width="30" height="36" rx="5" fill="#FFFBF0" stroke="#2B6CB0" stroke-width="3"/><rect x="13" y="2" width="14" height="8" rx="3" fill="#2B6CB0"/><path d="M11 20 l3 3 l5 -6 M11 32 l3 3 l5 -6" stroke="#3F8F3A" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 20 h7 M23 32 h7" stroke="#9AA6B2" stroke-width="3" stroke-linecap="round"/></svg>`;
+
 export const ISLAND_ART = {
+  listIcon,
   crab, pelican, gull, octopus, penguin, seal, iguana, parrot, monkey, salamander, tortoise, chick,
   umbrella, sandMound, castleRuin: castleSvg(0), castle1: castleSvg(1), castle2: castleSvg(2), castle3: castleSvg(3), castleIcon,
   partBig, partMid, partSmall, bucket, fireBucket, shell, boat, post,

@@ -9,10 +9,10 @@ export function initState(st) { return st; }
 
 export function checklist(st) {
   return [
-    { art: 'wool', ok: !!st.woolGiven },
-    { art: 'lantern', ok: !!st.lit },
-    { art: 'crystal', ok: !!st.bellGot },
-    { art: 'bell', ok: !!st.finished },
+    { art: 'wool', ok: !!st.woolGiven, label: 'wełna dla świstaka' },
+    { art: 'lantern', ok: !!st.lit, label: 'latarka do jaskini' },
+    { art: 'crystal', ok: !!st.bellGot, label: 'kryształ dla orlicy' },
+    { art: 'bell', ok: !!st.finished, label: 'dzwonek dla owieczki' },
   ];
 }
 

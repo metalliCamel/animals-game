@@ -20,9 +20,9 @@ const allPlaced = (st) => Object.keys(PIECES).every((k) => st.placed[k]);
 
 function checklist(st) {
   return [
-    ...Object.keys(PIECES).map((k) => ({ art: PIECES[k], ok: !!(st.got[k] || st.placed[k]) })),
-    { art: 'fireStone', ok: !!st.fireGot },
-    { art: 'lighthouseIcon', ok: !!st.finished },
+    ...Object.keys(PIECES).map((k) => ({ art: PIECES[k], ok: !!(st.got[k] || st.placed[k]), label: `szkiełko: ${NAME[k]}${st.placed[k] ? ' (w ramce)' : ''}` })),
+    { art: 'fireStone', ok: !!st.fireGot, label: 'ognisty kamyk w wiaderku' },
+    { art: 'lighthouseIcon', ok: !!st.finished, label: 'latarnia świeci' },
   ];
 }
 

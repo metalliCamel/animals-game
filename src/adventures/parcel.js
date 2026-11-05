@@ -16,6 +16,11 @@ export default {
     { id: 'frog', art: 'frog', x: 80, b: 30, w: 12, label: 'Żabka' },
     { id: 'hedgehog', art: 'hedgehog', x: 46, b: 10, w: 13, label: 'Jeżyk' },
   ],
+  checklist: (st) => [
+    { art: 'parcel', ok: !!st.got, label: 'paczka od sowy' },
+    { art: 'duckIcon', ok: false, label: 'zanieś ją temu, kto jest na rysunku' },
+  ],
+  where: (st) => (st.got ? 'Popatrz na rysunek na paczce i zanieś ją właściwemu zwierzątku.' : 'Sowa listonoszka siedzi na pieńku.'),
   start(api) {
     const n = api.name;
     const st = api.state;

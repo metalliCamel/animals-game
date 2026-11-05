@@ -17,10 +17,10 @@ function initState(st) {
 
 function checklist(st) {
   return [
-    { art: 'parrotEgg', ok: !!st.eggGot },
-    { art: 'leaves', ok: !!(st.leavesGot || st.nest >= 1) },
-    { art: 'featherWhite', ok: !!(st.featherGot || st.nest >= 2) },
-    { art: 'chick', ok: !!st.finished },
+    { art: 'parrotEgg', ok: !!st.eggGot, label: 'jajko w paprociach' },
+    { art: 'leaves', ok: !!(st.leavesGot || st.nest >= 1), label: 'liście palmowe od małpki' },
+    { art: 'featherWhite', ok: !!(st.featherGot || st.nest >= 2), label: 'białe piórko od mewy' },
+    { art: 'chick', ok: !!st.finished, label: 'pisklę się wykluwa' },
   ];
 }
 

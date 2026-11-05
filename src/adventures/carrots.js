@@ -19,6 +19,12 @@ export default {
     { id: 'pig', art: 'pig', x: 72, b: 12, w: 14, label: 'Świnka' },
     { id: 'goat', art: 'goat', x: 88, b: 20, w: 12, label: 'Koza' },
   ],
+  checklist: (st) => [
+    { art: 'hoof', ok: !!st.gotA, label: 'wskazówka na grządce' },
+    { art: st.culprit === 'goat' ? 'fur' : st.culprit === 'pig' ? 'mud' : 'magnifier', ok: !!st.gotB, label: 'wskazówka na płotku' },
+    { art: 'question', ok: false, label: 'kto zjadł marchewki?' },
+  ],
+  where: (st) => (!st.gotA ? 'Zajrzyj na grządkę.' : !st.gotB ? 'Obejrzyj płotek.' : 'Kliknij zwierzątko, które pasuje do obu wskazówek.'),
   start(api) {
     const n = api.name;
     const st = api.state;

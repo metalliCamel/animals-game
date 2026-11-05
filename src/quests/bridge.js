@@ -13,10 +13,10 @@ function initState(st) { return st; }
 
 function checklist(st) {
   return [
-    { art: 'plankItem', ok: !!(st.plankGot || st.plankIn) },
-    { art: 'rope', ok: !!(st.ropeGot || st.ropeIn) },
-    { art: 'stoneIcon', ok: !!(st.stonesGot || st.stonesIn) },
-    { art: 'kid', ok: !!st.finished },
+    { art: 'plankItem', ok: !!(st.plankGot || st.plankIn), label: 'najdłuższa deska' },
+    { art: 'rope', ok: !!(st.ropeGot || st.ropeIn), label: 'lina od owieczek' },
+    { art: 'stoneIcon', ok: !!(st.stonesGot || st.stonesIn), label: 'dwa płaskie kamienie' },
+    { art: 'kid', ok: !!st.finished, label: 'koziołek wraca do mamy' },
   ];
 }
 

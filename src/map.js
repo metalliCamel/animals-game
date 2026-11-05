@@ -1,7 +1,7 @@
 // Mapa regionu: miejsca połączone ścieżką i drogowskaz do innego regionu.
 // Piesek idzie do wybranego miejsca i zaczyna się przygoda.
 import { ART } from './art.js';
-import { say, stopSpeech } from './speech.js';
+import { say } from './speech.js';
 
 export function placeState(place, save) {
   if (place.soon) return 'soon';
@@ -117,45 +117,25 @@ export function runMap(root, ctx) {
 
   // Lista zadań przygody wieloetapowej
   if (quest && quest.started && !quest.open) {
-    const chip = document.createElement('div');
-    chip.className = 'chip map-chip';
-    chip.innerHTML = `<span class="ic">${ART[quest.icon]}</span><span class="t">${quest.title}</span><span class="tray">${quest.list.map((c) => `<span class="clue${c.ok ? '' : ' dim'}">${ART[c.art]}</span>`).join('')}</span>`;
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip map-chip chip-btn';
+    chip.setAttribute('aria-label', 'Co trzeba zrobić?');
+    chip.innerHTML = `<span class="ic">${ART[quest.icon]}</span><span class="t">${quest.title}</span><span class="tray">${quest.list.map((c) => `<span class="clue${c.ok ? '' : ' dim'}">${ART[c.art]}</span>`).join('')}</span><span class="chip-more">${ART.listIcon}</span>`;
+    chip.addEventListener('click', () => { if (!busy) ctx.onTasks(); });
     map.appendChild(chip);
   }
 
-  // Tablica zadań w otwartych krainach: wszystkie przygody naraz, z listą i miejscami
+  // Przycisk „Zadania” w otwartych krainach otwiera okienko „Co trzeba zrobić?”
   if (ctx.board) {
     const left = ctx.board.filter((b) => !b.done).length;
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'board-btn' + (left ? '' : ' all-done');
-    btn.innerHTML = `<span class="board-ic">${ART.magnifier}</span><span>Zadania</span><b>${ctx.board.length - left}/${ctx.board.length}</b>`;
+    btn.innerHTML = `<span class="board-ic">${ART.listIcon}</span><span>Zadania</span><b>${ctx.board.length - left}/${ctx.board.length}</b>`;
+    btn.addEventListener('click', () => { if (!busy) ctx.onTasks(); });
     map.appendChild(btn);
-    const panel = document.createElement('div');
-    panel.className = 'board';
-    panel.hidden = true;
-    panel.innerHTML = `<div class="board-head"><h2>Tablica zadań</h2><button type="button" class="btn ghost board-close">Zamknij</button></div>
-      <div class="board-rows">${ctx.board.map((b, i) => `
-        <button type="button" class="board-row${b.done ? ' done' : ''}" data-i="${i}">
-          <span class="row-ic">${ART[b.icon]}</span>
-          <span class="row-main"><span class="row-title">${b.title}</span>
-            <span class="row-list">${b.list.map((c) => `<span class="clue${c.ok ? '' : ' dim'}${c.out ? ' out' : ''}">${ART[c.art]}</span>`).join('')}</span></span>
-          <span class="row-where">${b.done ? `<span class="row-star">${ART.star}</span>` : b.where.map((w) => `<span class="where" title="${w.label}">${ART[w.icon]}</span>`).join('')}</span>
-        </button>`).join('')}</div>`;
-    map.appendChild(panel);
-    const open = () => {
-      panel.hidden = false;
-      say(left ? `Tablica zadań. Do zrobienia: ${left}. Kliknij zadanie, a powiem ci, gdzie iść.` : 'Wszystkie zadania zrobione! Brawo!');
-    };
-    btn.addEventListener('click', open);
-    panel.querySelector('.board-close').addEventListener('click', () => { panel.hidden = true; });
-    panel.querySelectorAll('.board-row').forEach((row) => row.addEventListener('click', () => {
-      const b = ctx.board[+row.dataset.i];
-      if (b.done) { say(`${b.title}. Zrobione! Brawo!`); return; }
-      const where = b.where.map((w) => w.label);
-      say(`${b.title}. ${b.started ? 'Teraz idź' : 'Zacznij'} tutaj: ${where.join(', ') || 'rozejrzyj się po wyspie'}.`);
-    }));
-    if (ctx.fromGate && !ctx.save.flags.boardSeen) { ctx.save.flags.boardSeen = true; later(200, open); }
+    if (ctx.fromGate && !ctx.save.flags.boardSeen) { ctx.save.flags.boardSeen = true; later(200, () => ctx.onTasks()); }
   }
 
   // Co powiedzieć po wejściu na mapę
@@ -178,5 +158,5 @@ export function runMap(root, ctx) {
     later(300, () => say(`${hi}${region.title}! Dokąd idziemy? Kliknij miejsce na mapie.`));
   }
 
-  return function destroy() { timers.forEach(clearTimeout); stopSpeech(); root.innerHTML = ''; };
+  return function destroy() { timers.forEach(clearTimeout); root.innerHTML = ''; };
 }

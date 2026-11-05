@@ -23,10 +23,10 @@ const keyOf = (item) => Object.keys(STONES).find((k) => STONES[k] === item);
 
 function checklist(st) {
   return [
-    { art: 'bamboo', ok: !!st.bambooGot },
-    { art: st.orderSeen ? `painting${st.order}` : 'question', ok: !!st.orderSeen },
-    ...['R', 'Y', 'B'].map((k) => ({ art: ART_OF[k], ok: !!st.got[k] })),
-    { art: 'volcanoIcon', ok: !!st.finished },
+    { art: 'bamboo', ok: !!st.bambooGot, label: 'bambus od małpki' },
+    { art: st.orderSeen ? `painting${st.order}` : 'question', ok: !!st.orderSeen, label: st.orderSeen ? `kolejność: ${st.order.split('').map((k) => NAME[k]).join(', ')}` : 'kolejność z malowidła' },
+    ...['R', 'Y', 'B'].map((k) => ({ art: ART_OF[k], ok: !!st.got[k], label: `${NAME[k]} kamień` })),
+    { art: 'volcanoIcon', ok: !!st.finished, label: 'tęczowy wybuch' },
   ];
 }
 

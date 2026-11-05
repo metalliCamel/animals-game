@@ -1,7 +1,7 @@
 // Silnik przygody: rysuje scenę z danych przygody i daje jej proste API
 // (mów, idź, nieś, potrząśnij, wygraj). Każda przygoda to osobny plik w src/adventures.
 import { ART } from './art.js';
-import { say, stopSpeech } from './speech.js';
+import { say, speaking } from './speech.js';
 import { ITEMS, itemPhrase } from './items.js';
 import { tone } from './sound.js';
 
@@ -95,9 +95,16 @@ export function runScene(root, adv, ctx) {
   root.innerHTML = `<div class="scene bg-${adv.bg}">${BACKGROUNDS[adv.bg] || ''}</div>`;
   const scene = root.firstElementChild;
 
-  const chip = document.createElement('div');
-  chip.className = 'chip';
-  chip.innerHTML = '<span class="ic"></span><span class="t"></span><span class="tray"></span>';
+  // Pasek zadania u góry: kliknięcie otwiera okienko „Co trzeba zrobić?”
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = 'chip chip-btn';
+  chip.setAttribute('aria-label', 'Co trzeba zrobić?');
+  chip.innerHTML = `<span class="ic"></span><span class="t"></span><span class="tray"></span>${ctx.onTasks ? `<span class="chip-more">${ART.listIcon}</span>` : ''}`;
+  chip.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    if (ctx.onTasks) { lastAct = Date.now(); panel.hidden = true; ctx.onTasks(); }
+  });
   scene.appendChild(chip);
 
   const bubble = document.createElement('div');
@@ -267,20 +274,32 @@ export function runScene(root, adv, ctx) {
 
   function later(ms, fn) { const t = setTimeout(() => { if (!finished) fn(); }, ms); timers.push(t); return t; }
 
+  // Dymek pojawia się dokładnie wtedy, gdy zaczyna się czytanie jego tekstu,
+  // i znika chwilę po końcu czytania (kwestie czekają w kolejce i się nie przerywają).
+  let bubbleToken = 0;
   function showBubble(id, short, full, icon) {
-    const el = els[id];
-    const r = el.getBoundingClientRect();
-    const sr = scene.getBoundingClientRect();
-    const cx = ((r.left + r.width / 2) - sr.left) / sr.width * 100;
-    const top = (r.top - sr.top) / sr.height * 100;
-    bubble.innerHTML = (icon ? `<span class="ic">${ART[icon]}</span>` : '') + '<span class="t"></span>';
-    bubble.querySelector('.t').textContent = short;
-    bubble.style.left = Math.min(Math.max(cx, 18), 82) + '%';
-    bubble.style.top = Math.max(top, 14) + '%';
-    bubble.hidden = false;
-    say(full || short);
-    clearTimeout(bubbleTimer);
-    bubbleTimer = setTimeout(() => { bubble.hidden = true; }, 5500);
+    const render = () => {
+      const el = els[id];
+      if (!el || !scene.isConnected) return;
+      const token = ++bubbleToken;
+      const r = el.getBoundingClientRect();
+      const sr = scene.getBoundingClientRect();
+      const cx = ((r.left + r.width / 2) - sr.left) / sr.width * 100;
+      const top = (r.top - sr.top) / sr.height * 100;
+      bubble.innerHTML = (icon ? `<span class="ic">${ART[icon]}</span>` : '') + '<span class="t"></span>';
+      bubble.querySelector('.t').textContent = short;
+      bubble.style.left = Math.min(Math.max(cx, 18), 82) + '%';
+      bubble.style.top = Math.max(top, 14) + '%';
+      bubble.hidden = false;
+      clearTimeout(bubbleTimer);
+      bubble.dataset.token = String(token);
+    };
+    const hide = () => {
+      const token = bubble.dataset.token;
+      clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(() => { if (bubble.dataset.token === token) bubble.hidden = true; }, 2600);
+    };
+    say(full || short, { onStart: render, onEnd: hide });
   }
 
   function sparkles(id, color) {
@@ -438,6 +457,8 @@ export function runScene(root, adv, ctx) {
 
   const hintLoop = setInterval(() => {
     if (finished || busy || !hint) return;
+    // Podpowiedź liczy się od końca ostatniej kwestii, żeby nie wchodziła komuś w słowo
+    if (speaking()) { lastAct = Date.now(); return; }
     if (Date.now() - lastAct > HINT_AFTER_MS) {
       lastAct = Date.now();
       replay(els[hint.id], 'hint');
@@ -452,7 +473,7 @@ export function runScene(root, adv, ctx) {
     timers.forEach(clearTimeout);
     clearInterval(hintLoop);
     clearTimeout(bubbleTimer);
-    stopSpeech();
+    // Mowa nie jest przerywana przy wyjściu ze sceny: ostatnia kwestia czyta się do końca
     root.innerHTML = '';
   };
 }

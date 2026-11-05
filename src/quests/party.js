@@ -18,11 +18,11 @@ const allInvited = (st) => Object.keys(GUESTS).every((g) => st.inv[g]);
 
 // Lista zadań pokazywana w scenie i na mapie
 export function checklist(st) {
-  const invited = Object.keys(GUESTS).filter((g) => st.inv[g]).length;
+  const FOR = { duck: 'kaczki', rabbit: 'królika', squirrel: 'wiewiórki' };
   return [
-    { art: 'egg', ok: !!st.cake },
-    { art: 'flower', ok: !!st.flowers },
-    ...Object.keys(GUESTS).map((g, i) => ({ art: 'invite', ok: i < invited })),
+    { art: 'egg', ok: !!st.cake, label: 'jajka na tort' },
+    { art: 'flower', ok: !!st.flowers, label: 'kwiatki na stół' },
+    ...Object.keys(GUESTS).map((g) => ({ art: 'invite', ok: !!st.inv[g], label: `zaproszenie dla ${FOR[g]}` })),
   ];
 }
 

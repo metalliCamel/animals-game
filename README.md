@@ -90,3 +90,8 @@ Przygody:
 Na mapach obu krain jest **tablica zadań**: każda przygoda z listą postępu i obrazkami miejsc, gdzie teraz trzeba iść.
 
 Technicznie: `src/quests/islands.js` trzyma plansze ośmiu miejsc i składa jedną scenę z „części” wszystkich aktywnych przygód. Każda część rejestruje reakcje `talk` (rozmowa), `item` (podany przedmiot), `intro`, `hint` i `hold`, z priorytetami. Ważne reakcje mają priorytet 0 lub wyższy, a przypomnienia ujemny, żeby nie zasłaniały innych przygód.
+
+## Lista zadań i mowa
+
+- **Co trzeba zrobić?** – pasek zadania u góry każdej sceny (z ikonką listy) i lista zadania na mapie są klikalne. Otwierają okienko z każdym potrzebnym przedmiotem i krokiem: obrazek, podpis, znaczek ✓ (mam), ✕ (odpada) albo szare tło (jeszcze nie), oraz miejsca, do których trzeba teraz iść. Kliknięcie nazwy zadania albo przedmiotu czyta je na głos. W Plaży i Wulkanie to samo okienko otwiera przycisk „Zadania” na mapie. Podpisy pochodzą z pola `label` w `checklist()` każdej przygody.
+- **Mowa w kolejce** (`src/speech.js`) – kwestie nie przerywają się nawzajem ani przy zmianie ekranu. Czekać mogą najwyżej dwie (starsze oczekujące są pomijane, bieżąca zawsze kończy się w całości). Dymek pokazuje się, gdy zaczyna się czytanie jego tekstu. Długie teksty są dzielone na zdania (obejście ucinania mowy w Chrome). Gdy syntezator nie ruszy w ciągu sekundy, gra tylko odmierza czas czytania.

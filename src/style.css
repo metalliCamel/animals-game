@@ -305,6 +305,44 @@ body {
 .row-star { width: 40px; display: block; }
 .row-star svg { width: 100%; height: auto; display: block; }
 
+/* Pasek zadania jako przycisk i okienko „Co trzeba zrobić?” */
+.chip-btn { border: 0; font-family: var(--read); color: var(--ink); cursor: pointer; box-shadow: 0 4px 0 #0002; transition: transform .1s; }
+.chip-btn:hover { transform: translateY(-1px); }
+.chip-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #0002; }
+.chip-btn:focus-visible { outline: 4px solid #2B7BD6; outline-offset: 3px; }
+.chip .chip-more { width: 1.6em; display: block; margin-left: 2px; padding-left: 8px; border-left: 2px solid #E6DCC0; }
+.chip .chip-more svg { width: 100%; height: auto; display: block; }
+.overlay.tasks { justify-content: flex-start; overflow-y: auto; gap: 14px; }
+.tasks-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; width: min(100%, 900px); }
+.tasks-head h1 { font-size: clamp(26px, 4vw, 44px) !important; }
+.task-rows { display: flex; flex-direction: column; gap: 14px; width: min(100%, 900px); }
+.task-row { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 14px; border-radius: 22px; background: #fff; border: 3px solid #E6DCC0; text-align: left; }
+.task-row.done { background: #EEF7E2; border-color: #CFE6B4; }
+.task-title { display: flex; align-items: center; gap: 12px; border: 0; background: none; padding: 0; cursor: pointer; font: inherit; color: var(--ink); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-size: clamp(15px, 2vw, 22px); text-align: left; }
+.task-ic { width: 40px; display: block; flex: none; }
+.task-ic svg, .task-star svg { width: 100%; height: auto; display: block; }
+.task-star { width: 30px; display: block; }
+.task-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.task-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px 8px; border-radius: 16px; border: 3px dashed #CFC7AE; background: #F7F2E4; cursor: pointer; font: inherit; color: #6B7466; }
+.task-item.ok { border: 3px solid #9BD06A; background: #EEF7E2; color: var(--ink); }
+.task-item.out { border-style: solid; border-color: #F0B4B8; background: #FBEDEE; }
+.ti-pic { position: relative; width: 52px; height: 52px; display: grid; place-items: center; }
+.ti-pic > svg { max-width: 100%; max-height: 100%; width: 100%; height: auto; }
+.task-item.todo .ti-pic > svg { filter: grayscale(.85) opacity(.55); }
+.task-item.out .ti-pic > svg { filter: grayscale(1) opacity(.45); }
+.ti-mark { position: absolute; right: -10px; top: -8px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 16px; color: #fff; }
+.task-item.ok .ti-mark { background: var(--leaf); }
+.task-item.out .ti-mark { background: var(--berry); }
+.task-item.todo .ti-mark { display: none; }
+.ti-label { font-size: 14px; line-height: 1.25; text-align: center; font-weight: 700; }
+.task-where { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 4px; border-top: 2px dashed #E6DCC0; }
+.tw-label { font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 14px; color: var(--leaf); }
+.tw-hint { font-size: 15px; }
+.tw-place { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 4px; border-radius: 999px; background: #FFF3CC; box-shadow: 0 0 0 2px var(--sun); font-weight: 700; font-size: 14px; }
+.tw-ic { width: 26px; height: 26px; display: grid; place-items: center; }
+.tw-ic svg { max-width: 100%; max-height: 100%; }
+.task-empty { font-size: 20px; }
+
 /* Album */
 .album { justify-content: flex-start; gap: 16px; overflow-y: auto; }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 118px)); justify-content: center; gap: 12px; width: min(100%, 1000px); }
