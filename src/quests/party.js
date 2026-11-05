@@ -159,8 +159,8 @@ const laka = {
         save();
         api.hint(null);
         api.say('cat', 'Pomóż mi!', 'Potrzebuję jajek na tort i kwiatków na stół. I roznieś, proszę, zaproszenia do kaczki, królika i wiewiórki!', 'invite');
-        await api.wait(3500);
         for (let i = 0; i < 3; i++) await api.bag.add('invite', 'cat');
+        await api.wait(1800);
         api.say('dog', 'Trzy zaproszenia!', 'Mam trzy zaproszenia w plecaku! Jajka są pewnie na farmie.', 'invite');
         api.later(4200, () => api.toMap('Na mapę!', 'Kliknij przycisk Mapa. Na mapie balonik pokazuje, gdzie jest coś do zrobienia!'));
         return;
@@ -273,12 +273,11 @@ const staw = {
         api.bag.take('mushroom', 1);
         api.carry(null);
         api.hop('frog');
-        api.say('frog', 'Dziękuję!', 'Kum kum! Czerwony grzybek! Teraz mam parasol od słońca. Proszę, oto kwiatki dla kotka!', 'flower');
-        await api.wait(2600);
         api.setArt('lilies', 'reeds');
         st.flowersTaken = true;
-        await api.bag.add('flower', 'lilies');
         save();
+        api.say('frog', 'Dziękuję!', 'Kum kum! Czerwony grzybek! Teraz mam parasol od słońca. Proszę, oto kwiatki dla kotka!', 'flower');
+        await api.bag.add('flower', 'lilies');
         nextHint();
         maybeLeave();
         return;

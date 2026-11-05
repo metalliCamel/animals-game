@@ -23,4 +23,9 @@ export const FRIENDS = [
   { adventure: 'bell', art: 'sheepBell', name: 'Owieczka', place: 'Góry', line: 'Owieczka ma swój dzwonek.' },
   { adventure: 'bell', art: 'marmot', name: 'Świstak', place: 'Góry', line: 'Świstak ma ciepły sweterek z wełny.' },
   { adventure: 'bell', art: 'eagle', name: 'Orlica', place: 'Góry', line: 'Orlica ma piękny kryształ.' },
+  { adventure: 'sandwich', art: 'fox', name: 'Lis', place: 'Góry', line: 'Lis z jaskini teraz zawsze pyta, zanim coś weźmie.' },
+  { adventure: 'sandwich', art: 'magpie', name: 'Sroka', place: 'Góry', line: 'Sroka ze szczytu lubi błyszczące rzeczy.' },
+  { adventure: 'bridge', art: 'chamois', name: 'Kozica', place: 'Góry', line: 'Kozica gra na bębenku.' },
+  { adventure: 'bridge', art: 'kid', name: 'Koziołek', place: 'Góry', line: 'Koziołek lubi skakać po kamieniach.' },
+  { adventure: 'concert', art: 'bat', name: 'Nietoperz', place: 'Góry', line: 'Nietoperz słyszy każdy dźwięk w jaskini.' },
 ];

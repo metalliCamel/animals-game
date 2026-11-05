@@ -297,7 +297,92 @@ const cave = `<svg viewBox="0 0 60 50"><path d="M2 48 C2 18 18 4 30 4 C42 4 58 1
 const rock = `<svg viewBox="0 0 110 60"><path d="M6 58 C2 34 26 14 54 14 C84 14 108 34 104 58 Z" fill="#8C9389"/><path d="M28 30 q14 -12 34 -8" stroke="#A3AAA0" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
 const flowersAlp = `<svg viewBox="0 0 80 40">${[[12, 22, '#B48FD8'], [30, 14, '#FFFBF0'], [48, 24, '#B48FD8'], [66, 16, '#FFD25A']].map(([x, y, c]) => `<path d="M${x} 40 V${y + 4}" stroke="#4E9E3C" stroke-width="2.5"/><g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-4" rx="3" ry="4.5" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="2.2" fill="#F08A24"/></g>`).join('')}</svg>`;
 
+// ---------- Góry: kolejne przygody ----------
+const fox = `<svg viewBox="0 0 120 100">
+<path d="M14 70 C-2 64 2 40 18 42 C26 44 26 56 34 60 Z" fill="#E07A2E"/><path d="M6 56 C2 50 6 44 12 44 C10 50 10 54 14 58 Z" fill="#FFFBF0"/>
+<rect x="34" y="60" width="9" height="32" rx="4" fill="#C9631E"/><rect x="70" y="60" width="9" height="32" rx="4" fill="#C9631E"/>
+<ellipse cx="58" cy="58" rx="30" ry="18" fill="#E07A2E"/><ellipse cx="62" cy="64" rx="16" ry="9" fill="#FFFBF0"/>
+<rect x="44" y="64" width="9" height="30" rx="4" fill="#E07A2E"/><rect x="80" y="62" width="9" height="32" rx="4" fill="#E07A2E"/>
+<rect x="44" y="86" width="9" height="8" rx="3" fill="#4A2E1A"/><rect x="80" y="86" width="9" height="8" rx="3" fill="#4A2E1A"/>
+<path d="M82 22 L84 4 L96 18 Z M102 20 L110 4 L112 24 Z" fill="#E07A2E"/><path d="M86 18 L87 9 L93 17 Z M104 18 L108 10 L109 21 Z" fill="#4A2E1A"/>
+<circle cx="98" cy="36" r="18" fill="#E07A2E"/>
+<path d="M88 40 C96 52 110 52 118 42 C112 38 104 38 98 42 Z" fill="#FFFBF0"/><circle cx="118" cy="42" r="3.5" fill="#2E3A2A"/>
+<path d="M92 32 q4 -3 8 0" stroke="#2E3A2A" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="106" cy="31" r="3" fill="#2E3A2A"/><circle cx="107" cy="30" r="1" fill="#fff"/>
+</svg>`;
+
+const magpie = `<svg viewBox="0 0 100 100">
+<path d="M14 62 L-2 86 L22 72 Z" fill="#1F2A38"/><path d="M18 60 L4 92 L28 70 Z" fill="#2B4A6B"/>
+<ellipse cx="46" cy="58" rx="28" ry="20" fill="#1F2A38"/>
+<ellipse cx="50" cy="66" rx="18" ry="11" fill="#FFFBF0"/>
+<path d="M28 50 C40 42 60 46 66 58 C54 60 40 60 28 50 Z" fill="#FFFBF0"/><path d="M32 52 C42 48 56 50 62 58" stroke="#2B4A6B" stroke-width="3" fill="none"/>
+<circle cx="72" cy="38" r="15" fill="#1F2A38"/>
+<path d="M85 36 L98 40 L85 44 Z" fill="#3A3A3A"/>
+<circle cx="76" cy="34" r="3.5" fill="#FFFBF0"/><circle cx="77" cy="34" r="2" fill="#2E3A2A"/>
+<path d="M42 76 l-2 14 M54 76 l2 14 M40 90 l-5 3 M40 90 l3 4 M56 90 l5 3 M56 90 l-3 4" stroke="#3A3A3A" stroke-width="2.5" stroke-linecap="round"/>
+</svg>`;
+
+const chamois = (small) => `<svg viewBox="0 0 110 110">
+<rect x="30" y="66" width="8" height="34" rx="3" fill="#6E4A2E"/><rect x="64" y="66" width="8" height="34" rx="3" fill="#6E4A2E"/>
+<ellipse cx="50" cy="62" rx="30" ry="17" fill="#A0703F"/>
+<rect x="40" y="68" width="8" height="34" rx="3" fill="#A0703F"/><rect x="74" y="66" width="8" height="36" rx="3" fill="#A0703F"/>
+<path d="M40 98 h8 v6 h-8 z M74 98 h8 v6 h-8 z M30 96 h8 v6 h-8 z M64 96 h8 v6 h-8 z" fill="#2E2A26"/>
+<path d="M20 58 L12 52 L22 54 Z" fill="#A0703F"/>
+${small ? '' : `<path d="M80 20 C78 8 84 2 88 6 M92 20 C92 8 98 4 102 8" stroke="#2E2A26" stroke-width="4.5" fill="none" stroke-linecap="round"/>`}
+<ellipse cx="88" cy="38" rx="14" ry="16" fill="#A0703F"/>
+<path d="M78 30 L68 24 L76 36 Z M98 30 L106 26 L100 36 Z" fill="#8A5C33"/>
+<path d="M82 30 C82 44 86 52 88 54 C90 52 94 44 94 30 C90 26 86 26 82 30 Z" fill="#F1E6D6"/>
+<path d="M80 34 l4 10 M96 34 l-4 10" stroke="#2E2A26" stroke-width="4" stroke-linecap="round"/>
+<circle cx="83" cy="34" r="2.6" fill="#2E3A2A"/><circle cx="93" cy="34" r="2.6" fill="#2E3A2A"/>
+<ellipse cx="88" cy="50" rx="4" ry="3" fill="#4A3A2E"/>
+</svg>`;
+
+const lamb = sheep.replace('viewBox="0 0 120 100"', 'viewBox="0 0 120 100" class="lamb"');
+
+const sandwich = `<svg viewBox="0 0 44 36"><path d="M4 20 L22 4 L40 20 Z" fill="#E8B866"/><path d="M6 20 L22 7 L38 20 Z" fill="#F7D79A"/><path d="M5 20 q4 4 8 0 q4 4 8 0 q4 4 8 0 q4 4 8 0" stroke="#6CC24A" stroke-width="4" fill="none"/><rect x="4" y="22" width="36" height="5" rx="2" fill="#F08CA0"/><path d="M4 28 L40 28 L38 32 L6 32 Z" fill="#E8B866"/></svg>`;
+
+const basket = `<svg viewBox="0 0 48 44"><path d="M10 18 C10 4 38 4 38 18" stroke="#9A6A3C" stroke-width="4" fill="none"/><g transform="translate(6 2) scale(.8)">${sandwich.replace(/<\/?svg[^>]*>/g, '')}</g><path d="M4 18 h40 l-5 22 a3 3 0 0 1 -3 2 h-24 a3 3 0 0 1 -3 -2 z" fill="#C98E55"/><path d="M8 25 h32 M10 32 h28" stroke="#A8743E" stroke-width="2.5"/><path d="M4 18 h40" stroke="#E2525C" stroke-width="4"/></svg>`;
+
+const picnic = (full, guest) => `<svg viewBox="0 0 140 90">
+<rect x="18" y="48" width="8" height="40" rx="3" fill="#9A6A3C"/><rect x="114" y="48" width="8" height="40" rx="3" fill="#9A6A3C"/>
+<rect x="6" y="40" width="128" height="10" rx="4" fill="#C99A5E"/>
+<path d="M6 42 h128 v6 q-8 6 -16 0 q-8 6 -16 0 q-8 6 -16 0 q-8 6 -16 0 q-8 6 -16 0 q-8 6 -16 0 q-8 6 -16 0 q-8 6 -16 0 z" fill="#E2525C" opacity=".85"/>
+<ellipse cx="70" cy="38" rx="30" ry="6" fill="#FFFBF0" stroke="#E6DCC0" stroke-width="2"/>
+${full ? [50, 70, 90].map((x) => `<g transform="translate(${x - 14} 14) scale(.62)">${sandwich.replace(/<\/?svg[^>]*>/g, '')}</g>`).join('') : '<circle cx="62" cy="36" r="1.6" fill="#E8B866"/><circle cx="76" cy="37" r="1.4" fill="#E8B866"/><circle cx="70" cy="34" r="1.2" fill="#E8B866"/>'}
+${guest ? '' : ''}
+</svg>`;
+
+const crumbTrail = `<svg viewBox="0 0 220 30">${[[4, 18], [30, 10], [58, 20], [88, 8], [118, 18], [150, 10], [182, 20], [210, 12]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${3 + (i % 2)}" fill="#E8B866" stroke="#C99A5E" stroke-width="1"/>`).join('')}</svg>`;
+const crumbs = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#F3E2C8"/><circle cx="12" cy="18" r="3.5" fill="#E8B866"/><circle cx="22" cy="12" r="3" fill="#E8B866"/><circle cx="28" cy="22" r="4" fill="#E8B866"/><circle cx="17" cy="28" r="3" fill="#E8B866"/></svg>`;
+const furRed = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#FDEBD8"/><path d="M10 26 q4 -14 10 -14 q6 0 10 14 q-4 -6 -10 -6 q-6 0 -10 6 z" fill="#E07A2E"/><path d="M14 22 q6 -6 12 0" stroke="#FFFBF0" stroke-width="2" fill="none"/></svg>`;
+const feather = `<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="#E4ECF4"/><path d="M12 32 C10 20 18 8 30 6 C30 18 22 28 12 32 Z" fill="#1F2A38"/><path d="M14 30 C18 22 22 16 28 9" stroke="#FFFBF0" stroke-width="2" fill="none"/><path d="M20 20 C24 18 26 16 28 13" stroke="#2B4A6B" stroke-width="3" fill="none"/></svg>`;
+const clueSpot = (kind) => `<svg viewBox="0 0 110 60"><path d="M6 58 C2 34 26 16 54 16 C84 16 108 34 104 58 Z" fill="#8C9389"/><path d="M28 32 q14 -12 34 -8" stroke="#A3AAA0" stroke-width="5" fill="none" stroke-linecap="round"/>${kind === 'fur' ? '<path d="M70 26 q6 -14 14 -6 q6 -6 8 4 q-8 -2 -12 4 z" fill="#E07A2E"/>' : kind === 'feather' ? '<path d="M66 30 C66 18 76 10 90 8 C88 20 80 28 66 30 Z" fill="#1F2A38"/><path d="M68 28 C74 20 80 16 88 10" stroke="#FFFBF0" stroke-width="2" fill="none"/>' : ''}</svg>`;
+
+const bridge = (stage) => `<svg viewBox="0 0 120 120">
+<rect x="20" y="10" width="8" height="104" rx="3" fill="#7A5530"/><rect x="92" y="10" width="8" height="104" rx="3" fill="#7A5530"/>
+${stage.stones ? '<ellipse cx="24" cy="112" rx="16" ry="6" fill="#8C9389"/><ellipse cx="96" cy="112" rx="16" ry="6" fill="#8C9389"/><ellipse cx="24" cy="14" rx="14" ry="5" fill="#8C9389"/><ellipse cx="96" cy="14" rx="14" ry="5" fill="#8C9389"/>' : ''}
+${stage.plank ? [18, 34, 50, 66, 82, 98].map((y) => `<rect x="24" y="${y}" width="72" height="12" rx="3" fill="#C99A5E" stroke="#9A6A3C" stroke-width="2"/>`).join('') : '<rect x="24" y="96" width="30" height="10" rx="3" fill="#C99A5E" stroke="#9A6A3C" stroke-width="2" transform="rotate(8 40 100)"/>'}
+${stage.rope ? '<path d="M24 10 C20 50 20 80 24 114 M96 10 C100 50 100 80 96 114" stroke="#E8C75E" stroke-width="5" fill="none"/>' : ''}
+</svg>`;
+const plankItem = `<svg viewBox="0 0 48 20"><rect x="2" y="4" width="44" height="12" rx="3" fill="#C99A5E" stroke="#9A6A3C" stroke-width="2"/><path d="M10 8 h10 M26 12 h12" stroke="#9A6A3C" stroke-width="1.5"/></svg>`;
+const plank = (len) => `<svg viewBox="0 0 120 40"><ellipse cx="60" cy="36" rx="${len * 0.55}" ry="3" fill="#0002"/><rect x="${60 - len / 2}" y="18" width="${len}" height="14" rx="3" fill="#C99A5E" stroke="#9A6A3C" stroke-width="2"/></svg>`;
+const rope = `<svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="16" fill="none" stroke="#E8C75E" stroke-width="7"/><circle cx="22" cy="22" r="8" fill="none" stroke="#D9B24E" stroke-width="5"/><path d="M34 32 q6 6 4 10" stroke="#E8C75E" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
+const stoneFlat = `<svg viewBox="0 0 60 30"><ellipse cx="30" cy="22" rx="26" ry="7" fill="#8C9389"/><ellipse cx="30" cy="18" rx="26" ry="7" fill="#A3AAA0"/><ellipse cx="24" cy="16" rx="10" ry="2.5" fill="#C3C9C0"/></svg>`;
+const stoneRound = `<svg viewBox="0 0 60 50"><ellipse cx="30" cy="46" rx="20" ry="3" fill="#0002"/><circle cx="30" cy="26" r="20" fill="#A3AAA0"/><path d="M18 18 q8 -8 18 -6" stroke="#C3C9C0" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`;
+const stoneIcon = `<svg viewBox="0 0 44 30"><ellipse cx="22" cy="20" rx="20" ry="7" fill="#8C9389"/><ellipse cx="22" cy="16" rx="20" ry="7" fill="#A3AAA0"/></svg>`;
+const kidIcon = `<svg viewBox="0 0 110 110">${chamois(true).replace(/<\/?svg[^>]*>/g, '')}</svg>`;
+
+const note = `<svg viewBox="0 0 40 44"><path d="M14 36 V8 L34 4 V30" stroke="#2B6CB0" stroke-width="4" fill="none" stroke-linejoin="round"/><ellipse cx="10" cy="36" rx="7" ry="5.5" fill="#2B6CB0" transform="rotate(-18 10 36)"/><ellipse cx="30" cy="31" rx="7" ry="5.5" fill="#2B6CB0" transform="rotate(-18 30 31)"/><path d="M14 12 L34 8" stroke="#2B6CB0" stroke-width="5"/></svg>`;
+const whistle = `<svg viewBox="0 0 44 34"><circle cx="28" cy="20" r="12" fill="#FFD25A" stroke="#D9A62E" stroke-width="2.5"/><rect x="2" y="10" width="24" height="10" rx="3" fill="#FFD25A" stroke="#D9A62E" stroke-width="2.5"/><circle cx="28" cy="20" r="4" fill="#D9A62E"/><path d="M36 6 l4 -4 M40 12 l4 -2" stroke="#7FC7E8" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+const drum = `<svg viewBox="0 0 44 40"><ellipse cx="22" cy="12" rx="18" ry="6" fill="#FFFBF0" stroke="#C9A06A" stroke-width="2"/><path d="M4 12 V30 C4 38 40 38 40 30 V12" fill="#E2525C"/><path d="M4 12 L14 34 L22 14 L30 34 L40 12" stroke="#FFD25A" stroke-width="2.5" fill="none"/><path d="M30 2 L38 10 M36 2 L42 8" stroke="#9A6A3C" stroke-width="3" stroke-linecap="round"/></svg>`;
+const sunsetSun = `<svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" fill="#F7A24A"/><circle cx="30" cy="30" r="18" fill="#FFC56A"/></svg>`;
+
 export const ART = {
+  fox, magpie, chamois: chamois(false), kid: kidIcon, lamb, sandwich, basket,
+  picnicEmpty: picnic(false), picnicFull: picnic(true), crumbTrail, crumbs, furRed, feather,
+  clueSpot: clueSpot(''), clueSpotFur: clueSpot('fur'), clueSpotFeather: clueSpot('feather'),
+  bridgeBroken: bridge({}), bridgeAll: bridge({ plank: true, rope: true, stones: true }),
+  plankItem, plankShort: plank(40), plankMid: plank(70), plankLong: plank(110), rope, stoneFlat, stoneRound, stoneIcon,
+  note, whistle, drum, sunsetSun,
   sheep, sheepBell, marmot, hut, wool, lantern, bat, crystal, crystals, crystalsTaken, bell: bellItem, eagle,
   nestBell: nestRock(true), nestEmpty: nestRock(false), peak, cave, rock, flowersAlp,
   invite, egg, flower, mushroom, nest, nestEggs, lilies, balloons, cake,
@@ -308,3 +393,8 @@ export const ART = {
   rabbit, chicken, pig, goat, fence: fence(), fenceFur: fence(furTuft), fenceMud: fence(mudSplat),
   patchEmpty: patch(false), patchFull: patch(true), carrot, hoof, hoofTrail, fur, mud, magnifier, question,
 };
+
+// Mostek w każdym stanie budowy: bridge + [deska][lina][kamienie] jako 0/1, np. bridge101
+for (const p of [0, 1]) for (const r of [0, 1]) for (const s of [0, 1]) {
+  ART[`bridge${p}${r}${s}`] = bridge({ plank: !!p, rope: !!r, stones: !!s });
+}

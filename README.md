@@ -58,7 +58,13 @@ Drugi region, otwierany drogowskazem na mapie doliny po urodzinach kotka. Miejsc
 
 6. **Dzwonek owieczki** (góry) – owieczka zgubiła dzwonek. Wełna od owieczki → świstak w schronisku daje za nią latarkę → latarka rozświetla ciemną jaskinię, nietoperz zdradza, że dzwonek zabrała orlica, a w jaskini leży kryształ → orlica na szczycie wymienia dzwonek na kryształ → dzwonek wraca na halę.
 
-Regiony i ich miejsca są w `src/world.js`, przygody wieloetapowe w `src/quests/`.
+7. **Kto podkrada kanapki?** – zagadka detektywistyczna. Okruszki ze stolika świstaka prowadzą nad jezioro, na kamieniu jest wskazówka (rude futerko albo czarno-białe pióro, losowo), a kozica podpowiada, kto takie ma. Podejrzani: lis w jaskini i sroka na szczycie. Sprawca był głodny, więc Hania dzieli się z nim kanapką, a on oddaje koszyk.
+8. **Mostek dla koziołka** – burza zepsuła mostek nad strumieniem. Deska ze schroniska (trzeba wybrać najdłuższą), lina od owieczek na hali (najpierw znaleźć schowane jagniątko) i dwa płaskie kamienie z jaskini (płaskie, nie okrągłe). Mostek rośnie z każdą częścią, a na końcu koziołek przechodzi do mamy.
+9. **Koncert na szczycie** – orlica daje nutki-zaproszenia dla owieczki (dzwonek), kozicy (bębenek) i świstaka, który zgubił gwizdek. Gwizdka szuka się słuchem w jaskini. Na koniec gra pamięciowa o zachodzie słońca: muzycy grają melodię, a Hania ją powtarza (2, 3 i 4 dźwięki). Ta przygoda zamyka góry.
+
+Miejsca w górach: Hala, Schronisko, Jaskinia, Jezioro, Szczyt. Drogowskaz „Dalej” czeka na następną krainę.
+
+Regiony i ich miejsca są w `src/world.js`, przygody wieloetapowe w `src/quests/`. Wspólny wygląd górskich miejsc i spokojne sceny (gdy w miejscu nie ma zadania) są w `src/quests/mountains.js`. Dźwięki instrumentów są generowane w `src/sound.js` (Web Audio, bez plików).
 
 ## Zapisy
 

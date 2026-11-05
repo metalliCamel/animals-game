@@ -6,6 +6,7 @@ import { runScene } from './scene.js';
 import { runMap } from './map.js';
 import { ADVENTURES, FRIENDS } from './adventures/index.js';
 import { REGIONS, ALL_PLACES, QUESTS, placeRegion } from './world.js';
+import { idleScene } from './quests/mountains.js';
 
 const $ = (s) => document.querySelector(s);
 const world = $('#world');
@@ -63,9 +64,9 @@ function questInfo(regionId) {
     list: q.checklist(st), todo: (placeId) => q.todo(placeId, st, bagCount),
   };
 }
-// Miejsce bez własnej przygody (góry) zawsze pokazuje scenę swojej przygody wieloetapowej
+// Aktywna przygoda wieloetapowa, która ma scenę w tym miejscu
 function questForPlace(place) {
-  return QUESTS.find((q) => q.scenes[place.id] && (questActive(q) || (!place.adventure && save.done.includes(q.after))));
+  return QUESTS.find((q) => q.scenes[place.id] && questActive(q));
 }
 
 // ---------- Mapa i miejsca ----------
@@ -76,9 +77,11 @@ function showMap(extra = {}) {
   save.resume = null;
   writeSave();
   const region = REGIONS[save.region] || REGIONS.dolina;
-  const target = region.gate && region.gate.to;
-  const tq = target && questInfo(target);
-  const gateCalls = !!(tq && (!tq.started || REGIONS[target].places.some((p) => tq.todo(p.id))));
+  // Drogowskaz „woła”, gdy w regionie za nim czeka przygoda z czymś do zrobienia
+  const gateCalls = (to) => {
+    const tq = to && questInfo(to);
+    return !!(tq && (!tq.started || REGIONS[to].places.some((p) => tq.todo(p.id))));
+  };
   destroy = runMap(world, {
     save, region, at: current?.place.id, quest: questInfo(region.id), gateCalls,
     onPick: startPlace, onTravel: travel, ...extra,
@@ -86,9 +89,10 @@ function showMap(extra = {}) {
 }
 
 function travel(regionId) {
+  const from = save.region;
   save.region = regionId;
   current = null;
-  showMap({ fromGate: true });
+  showMap({ fromGate: from });
 }
 
 function startPlace(place) {
@@ -98,13 +102,24 @@ function startPlace(place) {
   save.region = placeRegion(place.id);
   save.resume = { place: place.id };
   writeSave();
-  const common = { name: save.name, bag, onWin, saveState: writeSave, pulseMap: () => mapBtn.classList.add('pulse') };
+  const common = {
+    name: save.name, bag, onWin, saveState: writeSave, pulseMap: () => mapBtn.classList.add('pulse'),
+    world: { done: save.done, flags: save.flags },
+  };
 
   const q = questForPlace(place);
   if (q) {
     const scene = { ...q.scenes[place.id], id: q.id, sticker: q.sticker, winText: q.winText };
     current = { place, adventure: scene };
     destroy = runScene(world, scene, { ...common, state: questState(q) });
+    if (questState(q).finished) onWin(scene);
+    return;
+  }
+  // Miejsce w górach bez aktualnego zadania: spokojna scena, w której można porozmawiać
+  if (!place.adventure) {
+    const scene = { ...idleScene(place.id), id: 'idle-' + place.id };
+    current = { place, adventure: scene };
+    destroy = runScene(world, scene, { ...common, state: {} });
     return;
   }
   // Zwykła przygoda: jej stan też jest zapisywany, żeby można było wrócić w połowie
@@ -129,6 +144,8 @@ function onWin(adv) {
   $('#sticker').innerHTML = `${ART.star}<span class="sticker-pic">${ART[adv.sticker]}</span>`;
   $('#endTitle').textContent = `Brawo, ${save.name}!`;
   $('#endText').textContent = adv.winText;
+  // Przygód wieloetapowych nie powtarza się od razu, więc tylko „Na mapę”
+  $('#againBtn').hidden = QUESTS.some((q) => q.id === adv.id);
   endScreen.hidden = false;
   say(`Brawo! ${adv.winText}`);
 }

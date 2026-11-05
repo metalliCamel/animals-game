@@ -3,6 +3,7 @@
 import { ART } from './art.js';
 import { say, stopSpeech } from './speech.js';
 import { ITEMS, itemPhrase } from './items.js';
+import { tone } from './sound.js';
 
 const BACKGROUNDS = {
   meadow: `
@@ -24,6 +25,12 @@ const BACKGROUNDS = {
     <div class="cloud" style="top:8%;animation-delay:-12s"></div>
     <svg class="peaks" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L70 30 L120 80 L190 8 L250 70 L300 34 L400 120 Z" fill="#A9B4BC"/><path d="M50 120 L140 52 L210 120 Z M230 120 L330 50 L400 100 L400 120 Z" fill="#949FA8"/><path d="M70 30 L84 48 L74 44 L64 50 L58 45 Z M190 8 L210 32 L196 27 L184 34 L174 26 Z M300 34 L314 50 L302 46 L292 52 Z" fill="#FFFBF0"/></svg>
     <div class="ground alp-ground"></div>`,
+  mlake: `
+    <div class="cloud" style="top:10%;animation-delay:-22s"></div>
+    <svg class="peaks" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L70 30 L120 80 L190 8 L250 70 L300 34 L400 120 Z" fill="#A9B4BC"/><path d="M50 120 L140 52 L210 120 Z M230 120 L330 50 L400 100 L400 120 Z" fill="#949FA8"/><path d="M70 30 L84 48 L74 44 L64 50 L58 45 Z M190 8 L210 32 L196 27 L184 34 L174 26 Z M300 34 L314 50 L302 46 L292 52 Z" fill="#FFFBF0"/></svg>
+    <div class="ground alp-ground"></div>
+    <div class="stream"></div>
+    <div class="far-bank"></div>`,
   cave: `
     <div class="cave-wall"></div>
     <div class="ground cave-ground"></div>
@@ -84,6 +91,7 @@ export function runScene(root, adv, ctx) {
     el.dataset.id = e.id;
     el.innerHTML = `<div class="art">${ART[e.art]}</div>`;
     place(el, e.x, e.b, e.w);
+    if (e.hidden) el.hidden = true;
     scene.appendChild(el);
     els[e.id] = el;
     data[e.id] = e;
@@ -298,6 +306,18 @@ export function runScene(root, adv, ctx) {
       },
     },
     onHold(fn) { onHold = fn; },
+    // Świat poza tą przygodą (ukończone przygody i ich stan), tylko do odczytu
+    world: ctx.world || { done: [], flags: {} },
+    tone,
+    // Postać przechodzi w inne miejsce sceny
+    move(id, x, b, ms = 1400) {
+      const el = els[id];
+      el.style.transition = `left ${ms}ms ease-in-out, bottom ${ms}ms ease-in-out`;
+      place(el, x, b);
+      data[id] = { ...data[id], x, b };
+      return new Promise((res) => later(ms + 40, res));
+    },
+    show(id, on = true) { els[id].hidden = !on; },
     cls(id, name, on = true) { els[id].classList.toggle(name, on); },
     sceneClass(name, on = true) { scene.classList.toggle(name, on); },
     // Piesek idzie w podane miejsce (np. żeby zrobić miejsce gościom)
@@ -366,7 +386,8 @@ export function runScene(root, adv, ctx) {
     if (hit) {
       const id = hit.dataset.id;
       if (handlers[id]) {
-        await approach(id);
+        // `stay`: postać reaguje od razu, bez podchodzenia pieska (np. w grze z melodią)
+        if (!data[id]?.stay) await approach(id);
         // Na czas dłuższej reakcji (animacje, plecak) kolejne kliknięcia czekają
         busy = true;
         try { await handlers[id](id); } finally { busy = false; }

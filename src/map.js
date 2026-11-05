@@ -53,31 +53,35 @@ export function runMap(root, ctx) {
     btns[p.id] = b;
   }
 
-  // Drogowskaz do sąsiedniego regionu
-  const gate = region.gate;
-  let gateBtn = null;
-  if (gate) {
-    const open = !gate.after || save.done.includes(gate.after);
-    gateBtn = document.createElement('button');
-    gateBtn.type = 'button';
-    gateBtn.className = `gate${open ? '' : ' locked'}${ctx.gateCalls ? ' quest' : ''}`;
-    gateBtn.style.left = gate.x + '%';
-    gateBtn.style.top = gate.y + '%';
-    gateBtn.setAttribute('aria-label', `Drogowskaz: ${gate.label}`);
-    gateBtn.innerHTML = `<span class="sign"><span class="sign-ic">${ART[gate.icon]}</span><span class="sign-t">${gate.label}</span></span><span class="post"></span>${open ? '' : `<span class="badge lock">${ART.lock}</span>`}${ctx.gateCalls ? `<span class="qbadge">${ART.balloons}</span>` : ''}`;
-    gateBtn.addEventListener('click', () => {
+  // Drogowskazy do sąsiednich regionów (albo „wkrótce”)
+  const gates = region.gates || [];
+  const gateBtns = [];
+  for (const gate of gates) {
+    const open = !gate.soon && (!gate.after || save.done.includes(gate.after));
+    const calls = open && ctx.gateCalls(gate.to);
+    const g = document.createElement('button');
+    g.type = 'button';
+    g.className = `gate${open ? '' : ' locked'}${calls ? ' quest' : ''}`;
+    g.style.left = gate.x + '%';
+    g.style.top = gate.y + '%';
+    g.setAttribute('aria-label', `Drogowskaz: ${gate.label}`);
+    g.innerHTML = `<span class="sign"><span class="sign-ic">${ART[gate.icon]}</span><span class="sign-t">${gate.label}</span></span><span class="post"></span>${open ? '' : `<span class="badge lock">${ART.lock}</span>`}${calls ? `<span class="qbadge">${ART.balloons}</span>` : ''}`;
+    g.addEventListener('click', () => {
       if (busy) return;
-      if (!open) { say(gate.lockedText || 'Ta droga jest jeszcze zamknięta.'); bump(gateBtn); return; }
+      if (!open) { say(gate.lockedText || 'Ta droga jest jeszcze zamknięta.'); bump(g); return; }
       busy = true;
       say(`Idziemy: ${gate.label}!`);
       movePup(gate);
       later(1100, () => ctx.onTravel(gate.to));
     });
-    map.appendChild(gateBtn);
+    map.appendChild(g);
+    gateBtns.push({ gate, el: g, calls });
   }
+  const calling = gateBtns.find((x) => x.calls);
 
   // Piesek stoi przy ostatnio odwiedzonym miejscu albo przy drogowskazie, jeśli właśnie przyszedł
-  const here = places.find((p) => p.id === ctx.at) || (ctx.fromGate && gate) || places[0];
+  const back = ctx.fromGate && gates.find((g) => g.to === ctx.fromGate);
+  const here = places.find((p) => p.id === ctx.at) || back || places[0];
   const pup = document.createElement('div');
   pup.className = 'map-pup';
   pup.innerHTML = ART.pupFace;
@@ -118,7 +122,7 @@ export function runMap(root, ctx) {
   // Co powiedzieć po wejściu na mapę
   const hi = ctx.greet ? `Cześć, ${save.name}! ` : '';
   if (ctx.questNew) {
-    if (gateBtn && ctx.gateCalls) gateBtn.classList.add('fresh');
+    if (calling) calling.el.classList.add('fresh');
     later(400, () => say(ctx.questNew));
   } else if (quest) {
     const todoPlaces = places.filter((p) => quest.todo(p.id)).map((p) => p.label);
@@ -129,8 +133,8 @@ export function runMap(root, ctx) {
     btns[ctx.unlocked].classList.add('fresh');
     const p = places.find((x) => x.id === ctx.unlocked);
     later(400, () => say(`Hura! Nowe miejsce na mapie: ${p.label}! Kliknij, żeby tam pójść.`));
-  } else if (ctx.gateCalls) {
-    later(300, () => say(`${hi}Ktoś cię woła! Kliknij drogowskaz: ${gate.label}.`));
+  } else if (calling) {
+    later(300, () => say(`${hi}Ktoś cię woła! Kliknij drogowskaz: ${calling.gate.label}.`));
   } else if (ctx.greet || ctx.fromGate) {
     later(300, () => say(`${hi}${region.title}! Dokąd idziemy? Kliknij miejsce na mapie.`));
   }

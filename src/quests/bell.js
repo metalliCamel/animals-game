@@ -92,8 +92,8 @@ const hala = {
         save();
         api.hint(null);
         api.say('sheep', 'Idź do świstaka', 'Świstak ze schroniska słyszy wszystko w górach. Zanieś mu kłębek mojej wełny w prezencie, a na pewno pomoże!', 'wool');
-        await api.wait(4200);
         await api.bag.add('wool', 'sheep');
+        await api.wait(3400);
         api.say('dog', 'Wełna w plecaku!', 'Mam wełnę w plecaku! Idziemy do schroniska.', 'wool');
         api.later(3600, () => api.toMap('Na mapę!', 'Kliknij przycisk Mapa. Balonik pokazuje, gdzie iść!'));
         return;
@@ -150,8 +150,8 @@ const schronisko = {
         api.hint(null);
         api.hop('marmot');
         api.say('marmot', 'Dziękuję!', 'Fiu fiu! Ciepła wełna na sweterek! Dziękuję! Słyszałem dzwonienie w jaskini. Ale tam jest bardzo ciemno. Weź moją latarkę!', 'lantern');
-        await api.wait(5200);
         await api.bag.add('lantern', 'marmot');
+        await api.wait(4400);
         api.say('dog', 'Latarka!', 'Mam latarkę w plecaku! Idziemy do jaskini.', 'lantern');
         maybeLeave();
         return;
@@ -274,12 +274,12 @@ const szczyt = {
         api.carry(null);
         api.hop('eagle');
         api.sparkles('eagle', '#9FD8F2');
-        api.say('eagle', 'Wymienimy się!', 'Kiii! Ojej, jaki piękny kryształ! Błyszczy jeszcze bardziej niż dzwonek! Wymienimy się?', 'crystal');
-        await api.wait(4000);
         api.setArt('nest', 'nestEmpty');
         st.bellGot = true;
-        await api.bag.add('bell', 'nest');
         save();
+        api.say('eagle', 'Wymienimy się!', 'Kiii! Ojej, jaki piękny kryształ! Błyszczy jeszcze bardziej niż dzwonek! Wymienimy się?', 'crystal');
+        await api.bag.add('bell', 'nest');
+        await api.wait(3400);
         api.hint(null);
         api.say('dog', 'Mamy dzwonek!', 'Hura! Dzwonek jest w plecaku! Zanieśmy go owieczce na halę!', 'bell');
         maybeLeave(4000);

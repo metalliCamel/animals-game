@@ -10,6 +10,13 @@ export const ITEMS = {
   lantern: { art: 'lantern', forms: ['latarka', 'latarki', 'latarek'] },
   crystal: { art: 'crystal', forms: ['kryształ', 'kryształy', 'kryształów'] },
   bell: { art: 'bell', forms: ['dzwonek', 'dzwonki', 'dzwonków'] },
+  sandwich: { art: 'sandwich', forms: ['kanapka', 'kanapki', 'kanapek'] },
+  basket: { art: 'basket', forms: ['koszyk kanapek', 'koszyki kanapek', 'koszyków kanapek'] },
+  plank: { art: 'plankItem', forms: ['deska', 'deski', 'desek'] },
+  rope: { art: 'rope', forms: ['lina', 'liny', 'lin'] },
+  stone: { art: 'stoneIcon', forms: ['płaski kamień', 'płaskie kamienie', 'płaskich kamieni'] },
+  note: { art: 'note', forms: ['nutka', 'nutki', 'nutek'] },
+  whistle: { art: 'whistle', forms: ['gwizdek', 'gwizdki', 'gwizdków'] },
 };
 
 const NUM = ['zero', 'jeden', 'dwa', 'trzy', 'cztery', 'pięć', 'sześć', 'siedem', 'osiem', 'dziewięć', 'dziesięć'];
