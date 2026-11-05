@@ -20,7 +20,11 @@ export function runMap(root, ctx) {
   const later = (ms, fn) => timers.push(setTimeout(fn, ms));
 
   const pts = places.map((p) => `${p.x},${p.y}`).join(' ');
-  const deco = region.theme === 'mountains'
+  const deco = region.theme === 'beach'
+    ? `<div class="map-sea"></div><div class="map-blob" style="left:6%;top:56%;width:30%;background:#F7E2B4"></div>`
+    : region.theme === 'volcano'
+      ? `<div class="map-volcano"></div><div class="map-blob" style="left:4%;top:50%;width:30%;background:#7FC75A"></div><div class="map-lava"></div>`
+      : region.theme === 'mountains'
     ? `<div class="map-peak" style="left:30%;top:6%;width:30%"></div><div class="map-peak" style="left:58%;top:2%;width:34%"></div><div class="map-lake"></div>`
     : `<div class="map-water"></div><div class="map-blob" style="left:58%;top:8%;width:30%"></div><div class="map-blob" style="left:4%;top:44%;width:26%"></div>`;
   root.innerHTML = `
@@ -112,11 +116,46 @@ export function runMap(root, ctx) {
   function bump(b) { b.classList.remove('nope'); void b.offsetWidth; b.classList.add('nope'); }
 
   // Lista zadań przygody wieloetapowej
-  if (quest && quest.started) {
+  if (quest && quest.started && !quest.open) {
     const chip = document.createElement('div');
     chip.className = 'chip map-chip';
     chip.innerHTML = `<span class="ic">${ART[quest.icon]}</span><span class="t">${quest.title}</span><span class="tray">${quest.list.map((c) => `<span class="clue${c.ok ? '' : ' dim'}">${ART[c.art]}</span>`).join('')}</span>`;
     map.appendChild(chip);
+  }
+
+  // Tablica zadań w otwartych krainach: wszystkie przygody naraz, z listą i miejscami
+  if (ctx.board) {
+    const left = ctx.board.filter((b) => !b.done).length;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'board-btn' + (left ? '' : ' all-done');
+    btn.innerHTML = `<span class="board-ic">${ART.magnifier}</span><span>Zadania</span><b>${ctx.board.length - left}/${ctx.board.length}</b>`;
+    map.appendChild(btn);
+    const panel = document.createElement('div');
+    panel.className = 'board';
+    panel.hidden = true;
+    panel.innerHTML = `<div class="board-head"><h2>Tablica zadań</h2><button type="button" class="btn ghost board-close">Zamknij</button></div>
+      <div class="board-rows">${ctx.board.map((b, i) => `
+        <button type="button" class="board-row${b.done ? ' done' : ''}" data-i="${i}">
+          <span class="row-ic">${ART[b.icon]}</span>
+          <span class="row-main"><span class="row-title">${b.title}</span>
+            <span class="row-list">${b.list.map((c) => `<span class="clue${c.ok ? '' : ' dim'}${c.out ? ' out' : ''}">${ART[c.art]}</span>`).join('')}</span></span>
+          <span class="row-where">${b.done ? `<span class="row-star">${ART.star}</span>` : b.where.map((w) => `<span class="where" title="${w.label}">${ART[w.icon]}</span>`).join('')}</span>
+        </button>`).join('')}</div>`;
+    map.appendChild(panel);
+    const open = () => {
+      panel.hidden = false;
+      say(left ? `Tablica zadań. Do zrobienia: ${left}. Kliknij zadanie, a powiem ci, gdzie iść.` : 'Wszystkie zadania zrobione! Brawo!');
+    };
+    btn.addEventListener('click', open);
+    panel.querySelector('.board-close').addEventListener('click', () => { panel.hidden = true; });
+    panel.querySelectorAll('.board-row').forEach((row) => row.addEventListener('click', () => {
+      const b = ctx.board[+row.dataset.i];
+      if (b.done) { say(`${b.title}. Zrobione! Brawo!`); return; }
+      const where = b.where.map((w) => w.label);
+      say(`${b.title}. ${b.started ? 'Teraz idź' : 'Zacznij'} tutaj: ${where.join(', ') || 'rozejrzyj się po wyspie'}.`);
+    }));
+    if (ctx.fromGate && !ctx.save.flags.boardSeen) { ctx.save.flags.boardSeen = true; later(200, open); }
   }
 
   // Co powiedzieć po wejściu na mapę

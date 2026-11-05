@@ -5,7 +5,8 @@ import { loadAll, newSave, storeSlot, deleteSlot, whenText } from './saves.js';
 import { runScene } from './scene.js';
 import { runMap } from './map.js';
 import { ADVENTURES, FRIENDS } from './adventures/index.js';
-import { REGIONS, ALL_PLACES, QUESTS, placeRegion } from './world.js';
+import { REGIONS, ALL_PLACES, QUESTS, OPEN_QUESTS, placeRegion } from './world.js';
+import { composeScene, ISLAND_PLACE_IDS } from './quests/islands.js';
 import { idleScene } from './quests/mountains.js';
 
 const $ = (s) => document.querySelector(s);
@@ -55,7 +56,26 @@ function questState(q) {
   return q.initState(save.flags[q.id]);
 }
 const bagCount = (id) => save.bag.filter((x) => x === id).length;
+// Otwarte krainy (Plaża, Wulkan): wszystkie ich przygody są aktywne naraz
+const openUnlocked = () => save.done.includes('concert');
+const openActive = () => (openUnlocked() ? OPEN_QUESTS.filter((q) => !save.done.includes(q.id)) : []);
+const openTodo = (placeId) => openActive().some((q) => q.todo(placeId, questState(q), bagCount));
+function questBoard() {
+  const places = [...REGIONS.plaza.places, ...REGIONS.wulkan.places];
+  return OPEN_QUESTS.map((q) => {
+    const st = questState(q);
+    const done = save.done.includes(q.id);
+    return {
+      title: q.title, icon: q.icon, done, started: !!st.started, list: q.checklist(st),
+      where: done ? [] : places.filter((pl) => q.todo(pl.id, st, bagCount)).map((pl) => ({ label: pl.label, icon: pl.icon })),
+    };
+  });
+}
 function questInfo(regionId) {
+  if (REGIONS[regionId]?.open) {
+    if (!openActive().length) return null;
+    return { open: true, started: true, todo: openTodo, callText: 'Sprawdź tablicę zadań! Baloniki pokazują, gdzie ktoś potrzebuje pomocy.' };
+  }
   const q = QUESTS.find((x) => x.region === regionId && questActive(x));
   if (!q) return null;
   const st = questState(q);
@@ -84,8 +104,11 @@ function showMap(extra = {}) {
   };
   destroy = runMap(world, {
     save, region, at: current?.place.id, quest: questInfo(region.id), gateCalls,
+    board: region.open ? questBoard() : null,
     onPick: startPlace, onTravel: travel, ...extra,
   });
+  const finishedQ = openActive().find((q) => questState(q).finished);
+  if (finishedQ) { current = current || { place: region.places[0] }; onWin(finishedQ); }
 }
 
 function travel(regionId) {
@@ -107,6 +130,16 @@ function startPlace(place) {
     world: { done: save.done, flags: save.flags },
   };
 
+  // Plaża i Wulkan: jedna scena złożona ze wszystkich aktywnych przygód
+  if (ISLAND_PLACE_IDS.includes(place.id)) {
+    const active = openActive();
+    const scene = { ...composeScene(place.id, active, questState), id: 'island-' + place.id, sticker: 'star', winText: '' };
+    current = { place, adventure: scene };
+    destroy = runScene(world, scene, { ...common, state: {} });
+    const finishedQ = active.find((x) => questState(x).finished);
+    if (finishedQ) onWin(finishedQ);
+    return;
+  }
   const q = questForPlace(place);
   if (q) {
     const scene = { ...q.scenes[place.id], id: q.id, sticker: q.sticker, winText: q.winText };
@@ -145,7 +178,7 @@ function onWin(adv) {
   $('#endTitle').textContent = `Brawo, ${save.name}!`;
   $('#endText').textContent = adv.winText;
   // Przygód wieloetapowych nie powtarza się od razu, więc tylko „Na mapę”
-  $('#againBtn').hidden = QUESTS.some((q) => q.id === adv.id);
+  $('#againBtn').hidden = [...QUESTS, ...OPEN_QUESTS].some((q) => q.id === adv.id);
   endScreen.hidden = false;
   say(`Brawo! ${adv.winText}`);
 }

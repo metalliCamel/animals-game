@@ -297,6 +297,8 @@ const cave = `<svg viewBox="0 0 60 50"><path d="M2 48 C2 18 18 4 30 4 C42 4 58 1
 const rock = `<svg viewBox="0 0 110 60"><path d="M6 58 C2 34 26 14 54 14 C84 14 108 34 104 58 Z" fill="#8C9389"/><path d="M28 30 q14 -12 34 -8" stroke="#A3AAA0" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`;
 const flowersAlp = `<svg viewBox="0 0 80 40">${[[12, 22, '#B48FD8'], [30, 14, '#FFFBF0'], [48, 24, '#B48FD8'], [66, 16, '#FFD25A']].map(([x, y, c]) => `<path d="M${x} 40 V${y + 4}" stroke="#4E9E3C" stroke-width="2.5"/><g transform="translate(${x} ${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="-4" rx="3" ry="4.5" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="2.2" fill="#F08A24"/></g>`).join('')}</svg>`;
 
+import { ISLAND_ART } from './art-islands.js';
+
 // ---------- Góry: kolejne przygody ----------
 const fox = `<svg viewBox="0 0 120 100">
 <path d="M14 70 C-2 64 2 40 18 42 C26 44 26 56 34 60 Z" fill="#E07A2E"/><path d="M6 56 C2 50 6 44 12 44 C10 50 10 54 14 58 Z" fill="#FFFBF0"/>
@@ -398,3 +400,5 @@ export const ART = {
 for (const p of [0, 1]) for (const r of [0, 1]) for (const s of [0, 1]) {
   ART[`bridge${p}${r}${s}`] = bridge({ plank: !!p, rope: !!r, stones: !!s });
 }
+
+Object.assign(ART, ISLAND_ART);

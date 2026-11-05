@@ -72,3 +72,21 @@ Regiony i ich miejsca są w `src/world.js`, przygody wieloetapowe w `src/quests/
 - Trzy niezależne zapisy, każdy z własnym pieskiem. Usuwanie i zastępowanie pytają o potwierdzenie na stronie.
 - Gra zapisuje się sama przy każdej zmianie: miejsce, w którym jest piesek, plecak i postęp każdej przygody. Po wyjściu w połowie (przycisk Menu, zamknięcie karty) **Graj dalej** wraca dokładnie do tej samej sceny.
 - Zapis z pierwszej wersji gry jest automatycznie przenoszony do pierwszego miejsca.
+
+## Plaża i Wulkan (otwarte krainy)
+
+Otwierają się po koncercie w górach: drogowskaz „Plaża” na mapie gór, a z plaży drogowskaz „Wulkan”. W środku wszystkie miejsca i wszystkie cztery przygody są dostępne od razu i można je robić w dowolnej kolejności. Przedmioty krążą między krainami.
+
+- **Plaża:** Plaża (krab, zamek z piasku), Molo (pelikan, mewa), Rafa (ośmiornica, pingwin), Latarnia (foka).
+- **Wulkan:** Dżungla (papuga, małpka), Gorące źródła (żółw), Jaskinia lawy (salamandra), Krater (legwan, wulkan).
+
+Przygody:
+
+10. **Kto zburzył zamek?** – trzech podejrzanych (foka, mewa, pingwin), sprawca losowy. Każda wskazówka (ma dziób / nie lata / jest szary) wyklucza jedno zwierzątko, więc trzeba zebrać dwie. Wskazówki są w dwóch z trzech miejsc (zamek, pelikan, ośmiornica), trzecie nic nie wie. Na końcu zamek buduje się od największej części.
+11. **Latarnia nie świeci** – trzy kawałki szybki o różnych kształtach: trójkąt zakopany w piasku, kwadrat za policzenie ryb u pelikana, koło od papugi w zamian za muszlę od ośmiornicy. Każdy kawałek pasuje tylko do swojego miejsca w ramce. Ognisty kamyk od salamandry trzeba nieść w wiaderku kraba.
+12. **Tęczowy wybuch** – małpka daje bambus za dokładnie tyle bananów, ile pokazuje. Bambusem zdejmuje się głaz z wulkanu. Trzy kolorowe kamienie (lawa, źródła, rafa) trzeba dać wulkanowi w kolejności z malowidła w jaskini lawy.
+13. **Jajko papugi** – gra „ciepło–zimno” w paprociach, potem gniazdko w ciepłym piasku: liście od małpki, białe piórko od mewy (nie szare, nie czarne), jajko. Trzy kliknięcia ogrzewają jajko i wykluwa się pisklę.
+
+Na mapach obu krain jest **tablica zadań**: każda przygoda z listą postępu i obrazkami miejsc, gdzie teraz trzeba iść.
+
+Technicznie: `src/quests/islands.js` trzyma plansze ośmiu miejsc i składa jedną scenę z „części” wszystkich aktywnych przygód. Każda część rejestruje reakcje `talk` (rozmowa), `item` (podany przedmiot), `intro`, `hint` i `hold`, z priorytetami. Ważne reakcje mają priorytet 0 lub wyższy, a przypomnienia ujemny, żeby nie zasłaniały innych przygód.

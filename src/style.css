@@ -71,6 +71,44 @@ body {
 .scene.sunset { background: linear-gradient(#F7B07A, #FBD7A0 50%, #DCEFF8) !important; }
 .scene.sunset .peak-ground { background: linear-gradient(#B9A6B0, #8C8594); }
 
+/* Plaża */
+.bg-beach, .bg-pier, .bg-lightsea { background: linear-gradient(#BFE6F5, #E6F6FB 60%); }
+.sea { position: absolute; left: 0; right: 0; bottom: 40%; height: 16%; background: linear-gradient(#5FB2DA, #8FD0EC); }
+.sea::after { content: ""; position: absolute; left: 0; right: 0; top: 30%; height: 3px; background: repeating-linear-gradient(90deg, #ffffffaa 0 30px, transparent 30px 90px); animation: flow 4s linear infinite; }
+.sea-high { bottom: 28%; height: 34%; }
+.sand-ground { height: 44%; background: radial-gradient(120% 80% at 50% 0%, #F7E2B4, #E8C98A); border-radius: 0; }
+.planks { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: repeating-linear-gradient(90deg, #C99A5E 0 70px, #B8864E 70px 74px); box-shadow: inset 0 6px 0 #9A6A3C; }
+.bg-reef { background: linear-gradient(#4FA8D8, #8FD0EC 70%); }
+.reef-ground { height: 34%; background: radial-gradient(120% 80% at 50% 0%, #F7E2B4, #D9B87A); }
+.bubbles { position: absolute; inset: 0; background: radial-gradient(circle at 20% 70%, #ffffff66 0 6px, transparent 7px), radial-gradient(circle at 24% 50%, #ffffff55 0 4px, transparent 5px), radial-gradient(circle at 70% 40%, #ffffff55 0 5px, transparent 6px), radial-gradient(circle at 74% 24%, #ffffff44 0 3px, transparent 4px), radial-gradient(circle at 46% 30%, #ffffff44 0 4px, transparent 5px); animation: rise 6s ease-in-out infinite; }
+@keyframes rise { 50% { transform: translateY(-3%); } }
+.rock-ground { height: 42%; background: radial-gradient(120% 80% at 50% 0%, #A3AAA0, #7A8794); }
+.night-sky { position: absolute; inset: 0; background: linear-gradient(#1F2A48, #3A4A78 55%, transparent 56%); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
+.scene.night .night-sky { opacity: 1; }
+.scene.night .sunball, .scene.night .cloud { opacity: 0; }
+
+/* Wulkan */
+.bg-jungle { background: linear-gradient(#BFE9C0, #8FD08F 70%); }
+.jungle-back { position: absolute; left: 0; right: 0; bottom: 40%; height: 40%; background: radial-gradient(30% 60% at 10% 100%, #3F8F3A 99%, transparent 100%), radial-gradient(26% 50% at 40% 100%, #4E9E3C 99%, transparent 100%), radial-gradient(30% 64% at 72% 100%, #3F8F3A 99%, transparent 100%), radial-gradient(24% 50% at 96% 100%, #4E9E3C 99%, transparent 100%); }
+.jungle-ground { height: 44%; background: radial-gradient(120% 80% at 50% 0%, #7FC75A, #4E9E3C); }
+.bg-springs { background: linear-gradient(#CDEBF5, #F2E6D6 70%); }
+.springs-ground { height: 46%; background: radial-gradient(120% 80% at 50% 0%, #B8A68E, #8C7A64); }
+.bg-lavacave { background: #2A1C18; }
+.lava-wall { background: radial-gradient(70% 90% at 50% 100%, #6B3A2A, #2A1C18); }
+.lava-ground { background: radial-gradient(120% 80% at 50% 0%, #5A4036, #3A2A24); border-top-left-radius: 50% 8%; border-top-right-radius: 50% 8%; }
+.lava-river { position: absolute; left: -5%; right: -5%; bottom: 40%; height: 4%; background: linear-gradient(90deg, #F06A5A, #F7A24A, #FFD84A, #F7A24A, #F06A5A); border-radius: 50%; box-shadow: 0 0 24px 6px #F7A24A88; animation: lavaglow 2.4s ease-in-out infinite; }
+@keyframes lavaglow { 50% { box-shadow: 0 0 34px 10px #F7A24Aaa; } }
+.bg-crater { background: linear-gradient(#F7C89A, #FBE3C4 60%); }
+.crater-ground { height: 26%; background: radial-gradient(120% 80% at 50% 0%, #7A6A62, #4A3E36); border-radius: 0; }
+.smoke { position: absolute; left: 50%; top: 2%; width: 20%; height: 22%; background: radial-gradient(circle at 40% 70%, #E6E0DC 0 30%, transparent 31%), radial-gradient(circle at 60% 40%, #D8D0CC 0 28%, transparent 29%), radial-gradient(circle at 45% 20%, #EEE8E4 0 24%, transparent 25%); animation: puff 5s ease-in-out infinite; opacity: .8; }
+@keyframes puff { 50% { transform: translateY(-6%) scale(1.06); opacity: .6; } }
+.scene.erupt .smoke { opacity: 0; }
+.chip .clue.out { position: relative; filter: grayscale(1) opacity(.45); }
+.chip .clue.out::after { content: "✕"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--berry); font-weight: 800; font-size: 1.3em; filter: none; }
+.hit.cold .art { filter: drop-shadow(0 0 8px #7FB8F0); }
+.hit.warm .art { filter: drop-shadow(0 0 10px #F7A24A); }
+.hit.hot .art { filter: drop-shadow(0 0 12px #F06A5A); }
+
 /* Las */
 .forest-ground { height: 56%; background: radial-gradient(120% 80% at 50% 0%, #6FAE4A, #4E8F38); }
 .bg-forest { background: linear-gradient(#D9F0D0, #A9D8B0 60%); }
@@ -81,6 +119,7 @@ body {
 .ent { position: absolute; transform: translateX(-50%); transform-origin: 50% 100%; }
 .ent svg { width: 100%; height: auto; display: block; overflow: visible; }
 .hit { cursor: pointer; background: none; border: 0; padding: 0; }
+.ent:not(.hit):not(.dog) { pointer-events: none; }
 .ent .art { transform-origin: 50% 100%; }
 .shake .art { animation: shake .5s ease-in-out 2; }
 .hint .art { animation: shake .6s ease-in-out 3; }
@@ -231,6 +270,40 @@ body {
 .map.theme-mountains { background: radial-gradient(90% 90% at 40% 60%, #BFE09A, #8DBF68); }
 .map-peak { position: absolute; aspect-ratio: 2; clip-path: polygon(0 100%, 50% 0, 100% 100%); background: linear-gradient(#FFFBF0 0 22%, #A9B4BC 22%); opacity: .9; }
 .map-lake { position: absolute; left: 61%; top: 34%; width: 18%; height: 22%; border-radius: 50%; background: var(--water); opacity: .8; }
+
+/* Mapy Plaży i Wulkanu */
+.map.theme-beach { background: radial-gradient(90% 90% at 40% 70%, #F7E2B4, #E8C98A); }
+.map-sea { position: absolute; left: 0; right: 0; top: 0; height: 34%; background: linear-gradient(#5FB2DA, #8FD0EC); border-bottom-left-radius: 50% 30%; border-bottom-right-radius: 50% 30%; }
+.map.theme-volcano { background: radial-gradient(90% 90% at 40% 70%, #9BD06A, #5DB048); }
+.map-volcano { position: absolute; left: 62%; top: 2%; width: 34%; aspect-ratio: 2; clip-path: polygon(0 100%, 38% 8%, 62% 8%, 100% 100%); background: linear-gradient(#F7A24A 0 10%, #6B5B52 10%); }
+.map-lava { position: absolute; left: 56%; top: 58%; width: 18%; height: 8%; border-radius: 50%; background: #F7A24A; box-shadow: 0 0 20px 6px #F7A24A88; opacity: .8; }
+.board-btn { position: absolute; right: 2%; top: 4%; z-index: 6; display: flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; background: var(--paper); padding: 6px 14px 6px 8px; box-shadow: 0 5px 0 #0002; cursor: pointer; font: inherit; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-size: clamp(13px, 1.6vw, 18px); color: var(--ink); }
+.board-btn b { font-family: var(--display); font-variant-numeric: tabular-nums; color: var(--leaf); }
+.board-btn .board-ic { width: 28px; display: block; }
+.board-btn .board-ic svg { width: 100%; height: auto; display: block; }
+.board-btn:not(.all-done) { animation: glowbtn 1.6s ease-in-out infinite; }
+.board { position: absolute; inset: 6% 8%; z-index: 20; background: var(--paper); border-radius: 24px; box-shadow: 0 10px 0 #0002; display: flex; flex-direction: column; gap: 10px; padding: 16px 20px; overflow-y: auto; }
+.board-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.board-head h2 { margin: 0; font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3vw, 34px); color: var(--leaf); }
+.board-rows { display: flex; flex-direction: column; gap: 10px; }
+.board-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 14px; border: 3px solid #E6DCC0; border-radius: 18px; background: #fff; cursor: pointer; font: inherit; color: var(--ink); text-align: left; }
+.board-row:hover { border-color: var(--sun); }
+.board-row.done { background: #EEF7E2; border-color: #CFE6B4; }
+.row-ic { width: 48px; display: block; }
+.row-ic svg { width: 100%; height: auto; display: block; }
+.row-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.row-title { font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-size: clamp(14px, 1.8vw, 20px); }
+.row-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.row-list .clue { width: 32px; display: block; position: relative; }
+.row-list .clue svg { width: 100%; height: auto; display: block; }
+.row-list .clue.dim { filter: grayscale(1) opacity(.35); }
+.row-list .clue.out { filter: grayscale(1) opacity(.45); }
+.row-list .clue.out::after { content: "✕"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--berry); font-weight: 800; font-size: 1.3em; }
+.row-where { display: flex; gap: 6px; }
+.row-where .where { width: 40px; height: 40px; border-radius: 50%; background: #FFF3CC; display: grid; place-items: center; padding: 6px; box-shadow: 0 0 0 3px var(--sun); }
+.row-where .where svg { width: 100%; height: 100%; }
+.row-star { width: 40px; display: block; }
+.row-star svg { width: 100%; height: auto; display: block; }
 
 /* Album */
 .album { justify-content: flex-start; gap: 16px; overflow-y: auto; }

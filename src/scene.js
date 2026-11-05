@@ -39,6 +39,37 @@ const BACKGROUNDS = {
     <div class="cloud" style="top:62%;animation-delay:-5s;animation-duration:60s"></div>
     <div class="cloud" style="top:72%;height:7%;animation-delay:-30s;animation-duration:70s"></div>
     <div class="ground peak-ground"></div>`,
+  beach: `
+    <div class="sunball"></div>
+    <div class="cloud" style="top:12%;animation-delay:-14s"></div>
+    <div class="sea"></div>
+    <div class="ground sand-ground"></div>`,
+  pier: `
+    <div class="sunball" style="right:auto;left:10%"></div>
+    <div class="cloud" style="top:10%;animation-delay:-28s"></div>
+    <div class="sea sea-high"></div>
+    <div class="planks"></div>`,
+  reef: `
+    <div class="bubbles"></div>
+    <div class="ground reef-ground"></div>`,
+  lightsea: `
+    <div class="cloud" style="top:14%;animation-delay:-6s"></div>
+    <div class="sea"></div>
+    <div class="ground rock-ground"></div>
+    <div class="night-sky"></div>`,
+  jungle: `
+    <div class="jungle-back"></div>
+    <div class="ground jungle-ground"></div>`,
+  springs: `
+    <div class="cloud" style="top:10%;animation-delay:-20s"></div>
+    <div class="ground springs-ground"></div>`,
+  lavacave: `
+    <div class="cave-wall lava-wall"></div>
+    <div class="ground lava-ground"></div>
+    <div class="lava-river"></div>`,
+  crater: `
+    <div class="smoke"></div>
+    <div class="ground crater-ground"></div>`,
   forest: `
     <div class="beam" style="left:20%"></div>
     <div class="beam" style="left:58%;animation-delay:-3s"></div>
@@ -92,6 +123,7 @@ export function runScene(root, adv, ctx) {
     el.innerHTML = `<div class="art">${ART[e.art]}</div>`;
     place(el, e.x, e.b, e.w);
     if (e.hidden) el.hidden = true;
+    if (e.z) el.style.zIndex = String(e.z);
     scene.appendChild(el);
     els[e.id] = el;
     data[e.id] = e;
@@ -167,7 +199,8 @@ export function runScene(root, adv, ctx) {
     ev.stopPropagation();
     if (busy || finished) return;
     lastAct = Date.now();
-    if (held) { putBack(); say('Schowane do plecaka.'); return; }
+    // Trzymany przedmiot wraca do plecaka i od razu można wybrać inny
+    if (held) { putBack(); openBag(); return; }
     if (!panel.hidden) { panel.hidden = true; return; }
     openBag();
   });
@@ -330,7 +363,7 @@ export function runScene(root, adv, ctx) {
     get held() { return held; },
     // Rząd ikon w zadaniu u góry (np. 3 orzechy do zebrania)
     tray(arts) {
-      chip.querySelector('.tray').innerHTML = arts.map((a) => `<span class="clue${a.dim ? ' dim' : ''}">${ART[a.art || a]}</span>`).join('');
+      chip.querySelector('.tray').innerHTML = arts.map((a) => `<span class="clue${a.dim ? ' dim' : ''}${a.out ? ' out' : ''}">${ART[a.art || a]}</span>`).join('');
     },
     shake(id) { replay(els[id], 'shake'); },
     hop(id) { replay(els[id], 'happy'); },
@@ -370,11 +403,13 @@ export function runScene(root, adv, ctx) {
     },
     // Co pokazać, gdy dziecko utknie: postać się rusza, a ktoś podpowiada
     hint(id, short, full, speaker) { hint = id ? { id, short, full, speaker: speaker || id } : null; lastAct = Date.now(); },
-    win(delay = 3000) {
+    win(delay = 3000, which = adv) {
       chip.classList.add('done');
       hint = null;
-      later(delay, () => { finished = true; ctx.onWin(adv); });
+      later(delay, () => { finished = true; ctx.onWin(which); });
     },
+    // Czy na scenie trwa właśnie jakaś akcja (np. żeby nie podpowiadać w środku animacji)
+    get finished() { return finished; },
   };
 
   // Kliknięcia
