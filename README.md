@@ -105,7 +105,7 @@ Przycisk „Szafa” na mapie. Sześć kolorów sierści jest dostępnych od raz
 - **Na szyję:** czerwona obroża (od razu), niebieska chustka (kłębek), szalik (orzechy), muszka (urodziny), medal (mostek).
 - **Na plecy:** ognista peleryna (tęczowy wybuch), skrzydełka papużki (jajko).
 
-Strój zapisuje się w zapisie gry. Piesek nosi go w scenach (widok z boku), na mapie, na kartach zapisów i na ekranie startowym (widok od przodu). Ekran gwiazdki mówi o nowym ubranku, a nowości w szafie mają znaczek „Nowe!”.
+W nowej grze, zaraz po nadaniu imienia, otwiera się krok „Jak wygląda [imię]?”: ta sama szafa z przyciskiem „Gotowe! Gramy”. Dzięki temu od początku wiadomo, że pieska można przebierać. Przy zmianie imienia w trakcie gry ten krok jest pomijany. Strój zapisuje się w zapisie gry. Piesek nosi go w scenach (widok z boku), na mapie, na kartach zapisów i na ekranie startowym (widok od przodu). Ekran gwiazdki mówi o nowym ubranku, a nowości w szafie mają znaczek „Nowe!”.
 
 ## Czytanie z pieskiem
 

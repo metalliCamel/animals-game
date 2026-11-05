@@ -284,17 +284,26 @@ $('#wrItems').addEventListener('click', (e) => {
   if (!isUnlocked(i, save.done)) { say(`${i.label}. To ubranko dostaniesz za przygodę: ${ADV_TITLE(i.unlock)}.`, { interrupt: true }); return; }
   wear({ [i.slot]: outfit()[i.slot] === i.id ? null : i.id }, outfit()[i.slot] === i.id ? 'Zdjęte!' : `${i.label}! Pięknie!`);
 });
-function openWardrobe() {
-  wrSlot = unseenItems()[0]?.slot || 'fur';
+// intro: krok nowej gry zaraz po nadaniu imienia (żeby od początku było wiadomo, że pieska można przebierać)
+let wardrobeIntro = false;
+function openWardrobe(intro = false) {
+  wardrobeIntro = intro === true;
+  wrSlot = wardrobeIntro ? 'fur' : unseenItems()[0]?.slot || 'fur';
+  $('#wardrobeTitle').textContent = wardrobeIntro ? `Jak wygląda ${save.name}?` : 'Szafa pieska';
+  $('#wardrobeClose').textContent = wardrobeIntro ? 'Gotowe! Gramy' : 'Gotowe!';
   renderWardrobe();
   wardrobeScreen.hidden = false;
-  say(`Szafa pieska! Wybierz, w co ubrać ${save.name}.`, { interrupt: true });
+  setTopBar('name');
+  say(wardrobeIntro
+    ? `Jak wygląda ${save.name}? Wybierz kolor futerka i coś do ubrania. Za każdą przygodę dostaniesz nowe ubranka. Szafę znajdziesz potem na mapie.`
+    : `Szafa pieska! Wybierz, w co ubrać ${save.name}.`, { interrupt: true });
 }
-wardrobeBtn.addEventListener('click', openWardrobe);
+wardrobeBtn.addEventListener('click', () => openWardrobe());
 $('#wardrobeClose').addEventListener('click', () => {
   wardrobeScreen.hidden = true;
-  say(`Hau! Ale ładnie wyglądam!`);
-  showMap(); // piesek na mapie od razu w nowym stroju
+  say('Hau! Ale ładnie wyglądam!');
+  showMap(wardrobeIntro ? { greet: true } : {}); // piesek na mapie od razu w nowym stroju
+  wardrobeIntro = false;
 });
 
 // ---------- Okienko „Co trzeba zrobić?” ----------
@@ -463,7 +472,8 @@ function askName(newSlot) {
 function confirmName() {
   let n = nameInput.value.trim() || 'Burek';
   n = n.charAt(0).toUpperCase() + n.slice(1).toLowerCase();
-  if (pendingSlot !== null) {
+  const isNew = pendingSlot !== null;
+  if (isNew) {
     slot = pendingSlot;
     save = newSave(n);
     pendingSlot = null;
@@ -472,8 +482,10 @@ function confirmName() {
   }
   writeSave();
   nameScreen.hidden = true;
-  say(`Hau hau! Mam na imię ${n}!`);
   current = null;
+  // Nowa gra: drugi krok to wygląd pieska. Zmiana imienia w trakcie gry wraca od razu na mapę.
+  if (isNew) { say(`Hau hau! Mam na imię ${n}!`); setTimeout(() => openWardrobe(true), 1200); return; }
+  say(`Hau hau! Mam na imię ${n}!`);
   setTimeout(() => showMap({ greet: true }), 1800);
 }
 nameInput.addEventListener('input', () => {
